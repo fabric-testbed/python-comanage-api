@@ -5,8 +5,7 @@ EmailAddress API - https://spaces.at.internet2.edu/display/COmanage/EmailAddress
 
 Methods
 -------
-email_addresses_add() -> dict
-    ### NOT IMPLEMENTED ###
+email_addresses_add(email_address: str, person_type: str, person_id: int) -> dict
     Add a new EmailAddress.
 email_addresses_delete() -> bool
     ### NOT IMPLEMENTED ###
@@ -25,18 +24,78 @@ email_addresses_view_one(email_address_id: int) -> dict
 import json
 
 
-def email_addresses_add(self) -> dict:
+def email_addresses_add(self, email_address: str, person_type: str, person_id: int) -> dict:
     """
-    ### NOT IMPLEMENTED ###
     Add a new EmailAddress.
 
     :param self:
+    :param email_address:
+    :param person_type:
+    :param person_id:
     :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
+        {
+            "RequestType":"EmailAddresses",
+            "Version":"1.0",
+            "EmailAddresses":
+            [
+                {
+                    "Version":"1.0",
+                    "Mail":"<Mail>",
+                    "Type":"<Type>",
+                    "Description":"<Description>",
+                    "Verified":true|false,
+                    "Person":
+                    {
+                        "Type":("CO"|"Dept"|"Org"|"Organization"),
+                        "Id":"<ID>"
+                    }
+                }
+            ]
+        }:
+
+    Response Format
+        HTTP Status                  Response Body        Description
+        201  Added                   NewObjectResponse    EmailAddress added
+        400  Bad Request                                  EmailAddress Request not
+                                                          provided in POST body
+        400  Invalid Fields          ErrorResponse        An error in one or more provided fields
+        401  Unauthorized                                 Authentication required
+        403  No Person Specified                          Either a CO Person or an Org Identity
+                                                          must be specified to attach the
+                                                          Email Address to
+        403  Person Does Not Exist                        The specified CO Department, CO Person,
+                                                          or Org Identity does not exist
+        500  Other Error                                  Unknown error
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
+    post_body = {
+        "RequestType":"EmailAddresses",
+        "Version":"1.0",
+        "EmailAddresses":
+        [
+            {
+                "Version":"1.0",
+                "Mail":"<Mail>",
+                "Type":"official",
+                "Description":"",
+                "Verified": False,
+                "Person":
+                {
+                    "Type":"<Type>",
+                    "Id":"<ID>"
+                }
+            }
+        ]
+    }
+
+    post_body['EmailAddresses'][0]['Mail'] = email_address
+    post_body['EmailAddresses'][0]['Person']['Type'] = person_type
+    post_body['EmailAddresses'][0]['Person']['Id'] = person_id
+
+    post_body = json.dumps(post_body)
+    url = self._CO_API_URL + '/email_addresses.json'
+    resp = self._s.post(
+        url=url,
+        data=post_body
     )
     if resp.status_code == 201:
         return json.loads(resp.text)

@@ -183,8 +183,8 @@ class ComanageApi(object):
         return cous_view_one(self, cou_id=cou_id)
 
     # EmailAddress API
-    def email_addresses_add(self):
-        return email_addresses_add(self)
+    def email_addresses_add(self, email_address: str, person_type: str, person_id: int):
+        return email_addresses_add(self, email_address=email_address, person_type=person_type, person_id=person_id)
 
     def email_addresses_delete(self):
         return email_addresses_delete(self)

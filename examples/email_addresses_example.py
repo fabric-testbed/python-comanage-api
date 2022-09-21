@@ -12,10 +12,14 @@ from examples import *
 # must be set ahead of time and be valid within the CO
 CO_PERSON_ID = 163
 
-# email_addresses_add() -> dict
+# email_addresses_add(email_address: str, person_type: str, person_id: int) -> dict
 print('### email_addresses_add')
 try:
-    new_email_address = api.email_addresses_add()
+    new_email_address = api.email_addresses_add(
+        email_address='test@domain.com',
+        person_type='copersonid',
+        person_id=CO_PERSON_ID
+    )
     print(json.dumps(new_email_address, indent=4))
 except HTTPError as err:
     print('[ERROR] Exception caught')
