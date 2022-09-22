@@ -202,8 +202,8 @@ class ComanageApi(object):
         return email_addresses_view_one(self, email_address_id=email_address_id)
 
     # Indentifier API
-    def identifiers_add(self):
-        return identifiers_add(self)
+    def identifiers_add(self, identity_type: str, identifier: str, login_flag: bool, person_type: str, person_id: int):
+        return identifiers_add(self, identity_type=identity_type, identifier=identifier, login_flag=login_flag, person_type=person_type, person_id=person_id)
 
     def identifiers_assign(self):
         return identifiers_assign(self)
