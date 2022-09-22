@@ -5,8 +5,7 @@ Name API - https://spaces.at.internet2.edu/display/COmanage/Name+API
 
 Methods
 -------
-names_add() -> dict
-    ### NOT IMPLEMENTED ###
+names_add(person_type: str, person_id: int, given: str, family: str) -> dict
     Add a new Name.
 names_delete() -> bool
     ### NOT IMPLEMENTED ###
@@ -25,18 +24,88 @@ names_view_one(name_id: int) -> dict
 import json
 
 
-def names_add(self) -> dict:
+def names_add(self, person_type: str, person_id: int, given: str, family: str) -> dict:
     """
-    ### NOT IMPLEMENTED ###
-    Add a new Name.
+        Add a new Name.
 
-    :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
+        person_type: Type of person (i.e. "CO"|"Org")
+        person_id: COmanage ID for the person_type
+        given: First name for the person
+        family: Last name for the person
+        :request
+            {
+                "RequestType":"Names",
+                "Version":"1.0",
+                "Names":
+                [
+                    {
+                        "Version":"1.0",
+                        "Honorific":"<Honorific>",
+                        "Given":"<Given>",
+                        "Middle":"<Middle>",
+                        "Family":"<Family>",
+                        "Suffix":"<Suffix>",
+                        "Type":"<Type>",
+                        "Language":"<Language>",
+                        "PrimaryName":true|false,
+                        "Person":
+                        {
+                            "Type":("CO"|"Org"),
+                            "Id":"<ID>"
+                        }
+                    }
+                ]
+            }:
+
+        Response Format
+            HTTP Status                  Response Body        Description
+            201  Added                   NewObjectResponse    Name added
+            400  Bad Request                                  Name Request not
+                                                              provided in POST body
+            400  Invalid Fields          ErrorResponse        An error in one or more
+                                                              provided fields
+            401  Unauthorized                                 Authentication required
+            403  No Person Specified                          Either a CO Person or an Org Identity
+                                                              must be specified to attach the
+                                                              Name to
+            403  Person Does Not Exist                        The specified CO Person or
+                                                              Org Identity does not exist
+            500  Other Error                                  Unknown error
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
+    post_body = {
+        "RequestType":"Names",
+        "Version":"1.0",
+        "Names":
+        [
+            {
+                "Version":"1.0",
+                "Honorific":"",
+                "Given":"<Given>",
+                "Middle":"",
+                "Family":"<Family>",
+                "Suffix":"",
+                "Type":"official",
+                "Language":"",
+                "PrimaryName": True,
+                "Person":
+                {
+                    "Type":"<Type>",
+                    "Id":"<ID>"
+                }
+            }
+        ]
+    }
+
+    post_body['Names'][0]['Given'] = given
+    post_body['Names'][0]['Family'] = family
+    post_body['Names'][0]['Person']['Type'] = person_type
+    post_body['Names'][0]['Person']['Id'] = person_id
+
+    post_body = json.dumps(post_body)
+    url = self._CO_API_URL + '/names.json'
+    resp = self._s.post(
+        url=url,
+        data=post_body
     )
     if resp.status_code == 201:
         return json.loads(resp.text)

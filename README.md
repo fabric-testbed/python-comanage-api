@@ -274,8 +274,7 @@ ENTITY_OPTIONS = ['codeptid', 'cogroupid', 'copersonid', 'organizationid', 'orgi
 
 ### <a name="name"></a>[Name API](https://spaces.at.internet2.edu/display/COmanage/Name+API) (COmanage v3.3.0+)
 
-- `names_add() -> dict`
-    - `### NOT IMPLEMENTED ###`
+- `names_add(person_type: str, person_id: int, given: str, family: str) -> dict`
     - Add a new Name.
 - `names_delete() -> bool`
     - `### NOT IMPLEMENTED ###`
