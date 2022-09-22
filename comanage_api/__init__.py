@@ -115,8 +115,8 @@ class ComanageApi(object):
     def copeople_add(self):
         return copeople_add(self)
 
-    def copeople_delete(self):
-        return copeople_delete(self)
+    def copeople_delete(self, coperson_id: int):
+        return copeople_delete(self, coperson_id=coperson_id)
 
     def copeople_edit(self):
         return copeople_edit(self)

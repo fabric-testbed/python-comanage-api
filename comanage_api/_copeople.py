@@ -6,11 +6,9 @@ CoPerson API - https://spaces.at.internet2.edu/display/COmanage/CoPerson+API
 Methods
 -------
 copeople_add() -> dict
-    ### NOT IMPLEMENTED ###
     Add a new CO Person. A person must have an OrgIdentity before they can be added to a CO.
     Note that linking to an OrgIdentity and invitations are separate operations.
-copeople_delete() -> bool
-    ### NOT IMPLEMENTED ###
+copeople_delete(coperson_id: int) -> bool
     Remove a CO Person. This method will also delete related data, such as CoPersonRoles, EmailAddresses,
     and Identifiers. A person must be removed from any COs (CoPerson records must be deleted)
     before the OrgIdentity record can be removed.
@@ -41,17 +39,59 @@ import json
 
 def copeople_add(self) -> dict:
     """
-    ### NOT IMPLEMENTED ###
     Add a new CO Person. A person must have an OrgIdentity before they can be added to a CO.
     Note that linking to an OrgIdentity and invitations are separate operations.
 
-    :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
+    :request
+        {
+            "RequestType":"CoPeople",
+            "Version":"1.0",
+            "CoPeople":
+            [
+                {
+                    "Version":"1.0",
+                    "CoId":"<CoId>",
+                    "Timezone":"<Timezone>",
+                    "DateOfBirth":"<DateOfBirth>",
+                    "Status":("Active"|"Approved"|"Confirmed"|"Declined"|"Deleted"|"Denied"|
+                            "Duplicate"|"Expired"|"GracePeriod"|"Invited"|"Locked"|"Pending"|
+                            "PendingApproval"|"PendingConfirmation"|
+                            "PendingVetting"|"Suspended")
+                }
+            ]
+        }:
+
+    Response Format
+        HTTP Status                  Response Body        Description
+        201  Added                   NewObjectResponse    CoPerson created
+        400  Bad Request                                  CoPerson Request not
+                                                            provided in POST body
+        400  Invalid Fields          ErrorResponse        An error in one or more
+                                                            provided fields
+        401  Unauthorized                                 Authentication required
+        403  Co Does Not Exist                            The specified Co does not exist
+        500  Other Error                                  Unknown error
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
+    post_body = {
+        "RequestType":"CoPeople",
+        "Version":"1.0",
+        "CoPeople":
+        [
+            {
+                "Version":"1.0",
+                "CoId":"<CoId>",
+                "Status":"Active"
+            }
+        ]
+    }
+
+    post_body['CoPeople'][0]['CoId'] = self._CO_API_ORG_ID
+
+    post_body = json.dumps(post_body)
+    url = self._CO_API_URL + '/co_people.json'
+    resp = self._s.post(
+        url=url,
+        data=post_body
     )
     if resp.status_code == 201:
         return json.loads(resp.text)
@@ -59,19 +99,47 @@ def copeople_add(self) -> dict:
         resp.raise_for_status()
 
 
-def copeople_delete(self) -> bool:
+def copeople_delete(self, coperson_id: int) -> bool:
     """
-    ### NOT IMPLEMENTED ###
     Remove a CO Person. This method will also delete related data, such as CoPersonRoles, EmailAddresses,
     and Identifiers. A person must be removed from any COs (CoPerson records must be deleted)
     before the OrgIdentity record can be removed.
 
-    :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
+    :request
+        {
+            "RequestType":"CoPeople",
+            "Version":"1.0",
+            "CoPeople":
+            [
+                {
+                    "Version":"1.0",
+                    "CoId":"<CoId>",
+                    "Timezone":"<Timezone>",
+                    "DateOfBirth":"<DateOfBirth>",
+                    "Status":("Active"|"Approved"|"Confirmed"|"Declined"|"Deleted"|"Denied"|
+                            "Duplicate"|"Expired"|"GracePeriod"|"Invited"|"Locked"|"Pending"|
+                            "PendingApproval"|"PendingConfirmation"|
+                            "PendingVetting"|"Suspended")
+                }
+            ]
+        }:
+
+    Response Format
+        HTTP Status                  Response Body        Description
+        200  Deleted                                      OrgPerson deleted
+        400  Invalid Fields                               id not provided
+        401  Unauthorized                                 Authentication required
+        403  CoPersonRole Exists                          The Person has one or more Person
+                                                            Role records and cannot be deleted
+        403  CouPerson Exists in Unowned COU               The Person has a role in one
+                                                            or more COUs that the authenitcated
+                                                            user does not control
+        404  OrgIdentity Unknown                          id not found
+        500  Other Error                                  Unknown error
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
+
+    url = self._CO_API_URL + '/co_people/' + str(coperson_id) + '.json'
+    resp = self._s.delete(
         url=url
     )
     if resp.status_code == 200:

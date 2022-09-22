@@ -149,11 +149,9 @@ IDENTITY_OPTIONS = ['copersonid', 'orgidentityid']
 ### <a name="coperson"></a>[CoPerson API](https://spaces.at.internet2.edu/display/COmanage/CoPerson+API) (COmanage v3.3.0+)
 
 - `copeople_add() -> dict`
-    - `### NOT IMPLEMENTED ###`
     - Add a new CO Person. A person must have an OrgIdentity before they can be added to a CO.
     - Note that linking to an OrgIdentity and invitations are separate operations.
-- `copeople_delete() -> bool`
-    - `### NOT IMPLEMENTED ###`
+- `copeople_delete(coperson_id: int) -> bool`
     - Remove a CO Person. This method will also delete related data, such as `CoPersonRoles`, `EmailAddresses`,
 and `Identifiers`. 
     - A person must be removed from any COs (CoPerson records must be deleted)

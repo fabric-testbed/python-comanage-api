@@ -21,8 +21,11 @@ except HTTPError as err:
 # copeople_delete() -> bool
 print('### copeople_delete')
 try:
-    delete_copeople = api.copeople_delete()
-    print(json.dumps(delete_copeople, indent=4))
+    per_co_copeople = api.copeople_view_per_co()
+    if per_co_copeople['CoPeople']:
+        coperson_id = int(per_co_copeople['CoPeople'][0]['Id'])
+        delete_copeople = api.copeople_delete(coperson_id=coperson_id)
+    print(delete_copeople)
 except HTTPError as err:
     print('[ERROR] Exception caught')
     print('--> ', type(err).__name__, '-', err)
