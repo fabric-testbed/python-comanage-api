@@ -5,8 +5,7 @@ CoOrgIdentityLink API - https://spaces.at.internet2.edu/display/COmanage/CoOrgId
 
 Methods
 -------
-coorg_identity_links_add() -> dict
-    ### NOT IMPLEMENTED ###
+coorg_identity_links_add(coperson_id: int, org_identity_id: int) -> dict
     Add a new CO Org Identity Link.
     A person must have an Org Identity and a CO Person record before they can be linked.
     Note that invitations are a separate operation.
@@ -27,20 +26,65 @@ coorg_identity_links_view_one(org_identity_id: int) -> dict
 import json
 
 
-def coorg_identity_links_add(self) -> dict:
+def coorg_identity_links_add(self, coperson_id: int, org_identity_id: int) -> dict:
     """
-    ### NOT IMPLEMENTED ###
     Add a new CO Org Identity Link.
     A person must have an Org Identity and a CO Person record before they can be linked.
     Note that invitations are a separate operation.
 
-    :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
+    coapi: COmanage API object
+    coperson_id: COmanage ID of CoPerson to link
+    orgidentity_id: COmanage ID of OrgIdentity to link
+    :request
+    {
+        "RequestType":"CoOrgIdentityLinks",
+        "Version":"1.0",
+        "CoOrgIdentityLinks":
+        [
+            {
+                "Version":"1.0",
+                "CoPersonId":"<CoPersonId>",
+                "OrgIdentityId":"<OrgIdentityId>"
+            }
+        ]
+    }:
+
+    Response Format
+        HTTP Status                  Response Body        Description
+        201  Added                   NewObjectResponse    CoOrgIdentityLink created
+        400  Bad Request                                  CoOrgIdentityLink Request not
+                                                            provided in POST body
+        400  Invalid Fields          ErrorResponse        An error in one or more
+                                                            provided fields
+        401  Unauthorized                                 Authentication required
+        403  COPerson Does Not Exist                      The specified CO Person does not exist
+        403  OrgIdentity Already Linked                   The specified Org Identity is already
+                                                            a member of this CO
+        403  OrgIdentity Does Not Exist                   The specified Org Identity does
+                                                            not exist
+        500  Other Error                                  Unknown error
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
+    post_body = {
+        "RequestType":"CoOrgIdentityLinks",
+        "Version":"1.0",
+        "CoOrgIdentityLinks":
+        [
+            {
+                "Version":"1.0",
+                "CoPersonId":"<CoPersonId>",
+                "OrgIdentityId":"<OrgIdentityId>"
+            }
+        ]
+    }
+
+    post_body['CoOrgIdentityLinks'][0]['CoPersonId'] = coperson_id
+    post_body['CoOrgIdentityLinks'][0]['OrgIdentityId'] = org_identity_id
+
+    post_body = json.dumps(post_body)
+    url = self._CO_API_URL + '/co_org_identity_links.json'
+    resp = self._s.post(
+        url=url,
+        data=post_body
     )
     if resp.status_code == 201:
         return json.loads(resp.text)

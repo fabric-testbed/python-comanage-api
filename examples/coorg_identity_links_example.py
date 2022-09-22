@@ -12,14 +12,18 @@ from examples import *
 # must be set ahead of time and be valid within the CO
 IDENTITY_TYPE = 'orgidentityid'
 IDENTITY_ID = 190
+CO_PERSON_ID = 163
 
 # coorg_identity_links_add, coorg_identity_links_delete, coorg_identity_links_edit, \
 #     coorg_identity_links_view_all, coorg_identity_links_view_by_identity, coorg_identity_links_view_one
 
-# coorg_identity_links_add() -> dict
+# coorg_identity_links_add(coperson_id: int, org_identity_id: int) -> dict
 print('### coorg_identity_links_add')
 try:
-    new_coorg_identity_link = api.coorg_identity_links_add()
+    new_coorg_identity_link = api.coorg_identity_links_add(
+        coperson_id=CO_PERSON_ID,
+        org_identity_id=IDENTITY_ID
+    )
     print(json.dumps(new_coorg_identity_link, indent=4))
 except HTTPError as err:
     print('[ERROR] Exception caught')
