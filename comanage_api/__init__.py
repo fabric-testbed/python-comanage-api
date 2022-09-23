@@ -246,8 +246,8 @@ class ComanageApi(object):
     def org_identities_add(self):
         return org_identities_add(self)
 
-    def org_identities_delete(self):
-        return org_identities_delete(self)
+    def org_identities_delete(self, org_identity_id: int):
+        return org_identities_delete(self, org_identity_id=org_identity_id)
 
     def org_identities_edit(self):
         return org_identities_edit(self)
@@ -258,8 +258,8 @@ class ComanageApi(object):
     def org_identities_view_per_co(self):
         return org_identities_view_per_co(self)
 
-    def org_identities_view_per_identifier(self, identifier_id: int):
-        return org_identities_view_per_identifier(self, identifier_id=identifier_id)
+    def org_identities_view_per_identifier(self, identifier: str):
+        return org_identities_view_per_identifier(self, identifier=identifier)
 
     def org_identities_view_one(self, org_identity_id: int):
         return org_identities_view_one(self, org_identity_id=org_identity_id)

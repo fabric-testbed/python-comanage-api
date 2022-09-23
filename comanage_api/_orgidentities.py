@@ -6,10 +6,8 @@ OrgIdentity API - https://spaces.at.internet2.edu/display/COmanage/OrgIdentity+A
 Methods
 -------
 org_identities_add() -> dict
-    ### NOT IMPLEMENTED ###
     Add a new Organizational Identity. A person must have an OrgIdentity before they can be added to a CO.
-org_identities_delete() -> bool
-    ### NOT IMPLEMENTED ###
+org_identities_delete(org_identity_id: int) -> bool
     Remove an Organizational Identity.
     The person must be removed from any COs (CoPerson) before the OrgIdentity record can be removed.
     This method will also delete related data, such as Addresses, EmailAddresses, and TelephoneNumbers.
@@ -20,7 +18,7 @@ org_identities_view_all() -> dict
     Retrieve all existing Organizational Identities.
 org_identities_view_per_co(person_type: str, person_id: int) -> dict
     Retrieve all existing Organizational Identities for the specified CO.
-org_identities_view_per_identifier(identifier_id: int) -> dict
+org_identities_view_per_identifier(identifier: str) -> dict
     Retrieve all existing Organizational Identities attached to the specified identifier.
     Note the specified identifier must be attached to an Org Identity, not a CO Person.
 org_identities_view_one(org_identity_id: int) -> dict
@@ -32,16 +30,59 @@ import json
 
 def org_identities_add(self) -> dict:
     """
-    ### NOT IMPLEMENTED ###
     Add a new Organizational Identity. A person must have an OrgIdentity before they can be added to a CO.
 
-    :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
+    :request
+    {
+        "RequestType":"OrgIdentities",
+        "Version":"1.0",
+        "OrgIdentities":
+        [
+            {
+                "Version":"1.0",
+                "Affiliation":"<Affiliation>",
+                "Title":"<Title>",
+                "O":"<O>",
+                "Ou":"<Ou>",
+                "CoId":"<CoId>",
+                "ValidFrom":"<ValidFrom>",
+                "ValidThrough":"<ValidThrough>",
+                "DateOfBirth":"<DateOfBirth>"
+            }
+        ]
+    }:
+
+    Response Format
+        HTTP Status                  Response Body        Description
+        201  Added                   NewObjectResponse    OrgIdentity added
+        400  Bad Request                                  OrgIdentity Request not
+                                                            provided in POST body
+        400  Invalid Fields          ErrorResponse        An error in one or more
+                                                            provided fields
+        401  Unauthorized                                 Authentication required
+        403  CO Does Not Exist                            The specified CO does not exist
+        500  Other Error                                  Unknown error
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
+    post_body = {
+        "RequestType":"OrgIdentities",
+        "Version":"1.0",
+        "OrgIdentities":
+        [
+            {
+                "Version":"1.0",
+                "Affiliation":"member",
+                "CoId":"<CoId>"
+            }
+        ]
+    }
+
+    post_body['OrgIdentities'][0]['CoId'] = self._CO_API_ORG_ID
+
+    post_body = json.dumps(post_body)
+    url = self._CO_API_URL + '/org_identities.json'
+    resp = self._s.post(
+        url=url,
+        data=post_body
     )
     if resp.status_code == 201:
         return json.loads(resp.text)
@@ -49,19 +90,45 @@ def org_identities_add(self) -> dict:
         resp.raise_for_status()
 
 
-def org_identities_delete(self) -> bool:
+def org_identities_delete(self, org_identity_id: int) -> bool:
     """
-    ### NOT IMPLEMENTED ###
-    Remove an Organizational Identity.
-    The person must be removed from any COs (CoPerson) before the OrgIdentity record can be removed.
-    This method will also delete related data, such as Addresses, EmailAddresses, and TelephoneNumbers.
+    Remove an Organizational Identity. The person must be removed from any COs (CoPerson)
+    before the OrgIdentity record can be removed. This method will also delete related data,
+    such as Addresses, EmailAddresses, and TelephoneNumbers.
 
-    :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
+    :request
+        {
+            "RequestType":"OrgIdentities",
+            "Version":"1.0",
+            "OrgIdentities":
+            [
+                {
+                "Version":"1.0",
+                "Affiliation":"<Affiliation>",
+                "Title":"<Title>",
+                "O":"<O>",
+                "Ou":"<Ou>",
+                "CoId":"<CoId>",
+                "ValidFrom":"<ValidFrom>",
+                "ValidThrough":"<ValidThrough>",
+                "DateOfBirth":"<DateOfBirth>"
+                }
+            ]
+        }
+
+    Response Format
+        HTTP Status                  Response Body        Description
+        200  Deleted                                      OrgIdentity deleted
+        400  Invalid Fields                               id not provided
+        401  Unauthorized                                 Authentication required
+        403  CoPerson Exists         ErrorResponse        id must not be attached to any
+                                                            CoPerson. (Delete the CoPerson first.)
+        404  OrgIdentity Unknown                          id not found
+        500  Other Error                                  Unknown error
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
+
+    url = self._CO_API_URL + '/org_identities/' + str(org_identity_id) + '.json'
+    resp = self._s.delete(
         url=url
     )
     if resp.status_code == 200:
@@ -182,7 +249,7 @@ def org_identities_view_per_co(self) -> dict:
         resp.raise_for_status()
 
 
-def org_identities_view_per_identifier(self, identifier_id: int) -> dict:
+def org_identities_view_per_identifier(self, identifier: str) -> dict:
     """
     Retrieve all existing Organizational Identities attached to the specified identifier.
     Note the specified identifier must be attached to an Org Identity, not a CO Person.
@@ -221,7 +288,7 @@ def org_identities_view_per_identifier(self, identifier_id: int) -> dict:
         500 Other Error                             Unknown error
     """
     url = self._CO_API_URL + '/org_identities.json'
-    params = {'coid': self._CO_API_ORG_ID, 'search.identifier': int(identifier_id)}
+    params = {'coid': self._CO_API_ORG_ID, 'search.identifier': identifier}
     resp = self._s.get(
         url=url,
         params=params
