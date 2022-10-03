@@ -1,6 +1,8 @@
 import requests_mock
 from requests import Session
 
+from ._cogroupmember import cogroupmember_add, cogroupmember_delete, cogroupmember_edit, \
+    cogroupmember_view_all, cogroupmember_view_per_group, cogroupmember_view_one
 from ._coorgidentitylinks import coorg_identity_links_add, coorg_identity_links_delete, coorg_identity_links_edit, \
     coorg_identity_links_view_all, coorg_identity_links_view_by_identity, coorg_identity_links_view_one
 from ._copeople import copeople_add, copeople_delete, copeople_edit, copeople_find, copeople_match, \
@@ -91,6 +93,25 @@ class ComanageApi(object):
         self._s = Session()
         self._s.headers = {'Content-Type': 'application/json'}
         self._s.auth = (self._CO_API_USER, self._CO_API_PASS)
+
+    # CoGroupMember API
+    def cogroupmember_add(self, group_id: int, person_id: int):
+        return cogroupmember_add(self, group_id=group_id, person_id=person_id)
+
+    def cogroupmember_delete(self):
+        return cogroupmember_delete(self)
+
+    def cogroupmember_edit(self):
+        return cogroupmember_edit(self)
+
+    def cogroupmember_view_all(self):
+        return cogroupmember_view_all(self)
+
+    def cogroupmember_view_per_group(self, group_id: int):
+        return cogroupmember_view_per_group(self, group_id=group_id)
+
+    def cogroupmember_view_one(self):
+        return cogroupmember_view_one(self)
 
     # CoOrgIdentityLink API
     def coorg_identity_links_add(self):

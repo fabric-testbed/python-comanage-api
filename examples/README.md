@@ -7,6 +7,7 @@ Examples demonstrating basic usage for each wrapped endpoint. Some of the values
 ## Table of Contents
 
 - [Configuration](#config) `__init__.py` used by all examples
+- [CoGroupMember API](#cogroupmember) example output
 - [CoOrgIdentityLink API](#coorgidentitylink) example output
 - [CoPerson API](#coperson) example output
 - [CoPersonRole API](#copersonrole) example output
@@ -59,6 +60,33 @@ api = ComanageApi(
     co_api_org_name=COMANAGE_API_CO_NAME,
     co_ssh_key_authenticator_id=COMANAGE_API_SSH_KEY_AUTHENTICATOR_ID
 )
+```
+
+## <a name="cogroupmember"></a>CoGroupMember API
+
+Example: `cogroupmember_example.py`
+
+```console
+$ python examples/cogroupmember_example.py
+### cogroupmember_add
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+### cogroupmember_delete
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+### cogroupmember_edit
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+### cogroupmember_view_all
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+### cogroupmember_view_per_group
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+### cogroupmember_view_one
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+
 ```
 
 ## <a name="coorgidentitylink"></a>CoOrgIdentityLink API
