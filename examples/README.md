@@ -7,6 +7,7 @@ Examples demonstrating basic usage for each wrapped endpoint. Some of the values
 ## Table of Contents
 
 - [Configuration](#config) `__init__.py` used by all examples
+- [CoGroup API](#cogroup) example output
 - [CoOrgIdentityLink API](#coorgidentitylink) example output
 - [CoPerson API](#coperson) example output
 - [CoPersonRole API](#copersonrole) example output
@@ -59,6 +60,45 @@ api = ComanageApi(
     co_api_org_name=COMANAGE_API_CO_NAME,
     co_ssh_key_authenticator_id=COMANAGE_API_SSH_KEY_AUTHENTICATOR_ID
 )
+```
+
+## <a name="cogroup"></a>CoGroup API
+
+Example: `cogroup_example.py`
+
+```console
+$ python examples/cogroup_example.py
+### cogroup_add
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+### cogroup_delete
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+### cogroup_edit
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+### cogroup_reconcile_all
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+### cogroup_reconcile_one
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+### cogroup_view_all
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+### cogroup_view_per_co
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+### cogroup_view_per_coperson
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+### cogroup_view_per_identifier
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+### cogroup_view_one
+[ERROR] Exception caught
+-->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+
 ```
 
 ## <a name="coorgidentitylink"></a>CoOrgIdentityLink API

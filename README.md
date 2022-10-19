@@ -10,6 +10,7 @@ Available at PyPi: [https://pypi.org/project/fabric-comanage-api/](https://pypi.
 
 - [TL;DR](#tldr)
 - [API endpoints](#endpoints)
+    - [CoGroup](#cogroup)
     - [CoOrgIdentityLink](#coorgidentitylinks)
     - [CoPerson](#coperson)
     - [CoPersonRole](#copersonrole)
@@ -119,6 +120,38 @@ Return types based on implementation status of wrapped API endpoints
 - Not Implemented (`### NOT IMPLEMENTED ###`): 
     - `-> dict`: raise exception (`HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local`)
     - `-> bool`: raise exception (`HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local`)
+
+### <a name="cogroup"></a>[CoGroup API](https://spaces.at.internet2.edu/display/COmanage/CoGroup+API) (COmanage v4.0.0+)
+
+- `cogroup_add() -> dict`
+    - `### NOT IMPLEMENTED ###`
+    - Add a new CoGroup.
+- `cogroup_delete() -> bool`
+    - `### NOT IMPLEMENTED ###`
+    - Remove a CoGroup.
+- `cogroup_edit() -> bool`
+    - `### NOT IMPLEMENTED ###`
+    - Edit an existing CoGroup.
+- `cogroup_reconcile_all() -> bool`
+    - `### NOT IMPLEMENTED ###`
+    - Reconcile all membership groups.
+- `cogroup_reconcile_one() -> bool`
+    - `### NOT IMPLEMENTED ###`
+    - Reconcile memberships for a CoGroup.
+- `cogroup_view_all() -> dict`
+    - `### NOT IMPLEMENTED ###`
+    - Retrieve all existing CoGroups.
+- `cogroup_view_per_co() -> dict`
+    - Retrieve CoGroups attached to a CO.
+- `cogroup_view_per_coperson() -> dict`
+    - `### NOT IMPLEMENTED ###`
+    - Retrieve Groups attached to a CO Person.
+- `cogroup_view_per_identifier() -> dict`
+    - `### NOT IMPLEMENTED ###`
+    - Retrieve all existing CO Groups attached to the specified identifier.
+- `cogroup_view_one() -> dict`
+    - `### NOT IMPLEMENTED ###`
+    - Retrieve an existing CoGroup.
 
 ### <a name="coorgidentitylink"></a>[CoOrgIdentityLink API](https://spaces.at.internet2.edu/display/COmanage/CoOrgIdentityLink+API) (COmanage v4.0.0+)
 
