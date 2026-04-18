@@ -9,6 +9,42 @@ sys.path.append(
 )
 from examples import *
 
+# copeople_view_per_identifier(identifier: str, distinct_by_id: bool = True) -> dict
+print('### copeople_view_per_identifier')
+try:
+    identifier = 'http://cilogon.org/serverE/users/109379'
+    distinct_by_id = True
+    identifier_copeople = api.copeople_view_per_identifier(
+        identifier=identifier,
+        distinct_by_id=True
+    )
+    print(json.dumps(identifier_copeople, indent=4))
+    co_person_id = identifier_copeople.get('CoPeople')[0].get('Id')
+    print(co_person_id)
+except HTTPError as err:
+    print('[ERROR] Exception caught')
+    print('--> ', type(err).__name__, '-', err)
+    co_person_id = 0
+
+# email_addresses_view_per_person(person_type: str, person_id: int) -> dict:
+print('### email_addresses_view_per_person')
+try:
+    per_person_email_addresses = api.email_addresses_view_per_person(
+        person_type='copersonid',
+        person_id=co_person_id
+    )
+    print(json.dumps(per_person_email_addresses, indent=4))
+    email_address = per_person_email_addresses.get('EmailAddresses')[0].get('Mail')
+    print(email_address)
+except (TypeError, HTTPError) as err:
+    print('[ERROR] Exception caught')
+    print('--> ', type(err).__name__, '-', err)
+    email_address = None
+
+# -----
+
+exit(0)
+
 # copeople_add() -> dict
 print('### copeople_add')
 try:
@@ -84,7 +120,7 @@ except HTTPError as err:
 # copeople_view_per_identifier(identifier: str, distinct_by_id: bool = True) -> dict
 print('### copeople_view_per_identifier')
 try:
-    identifier = 'ImPACT1000002'
+    identifier = 'http://cilogon.org/serverA/users/242181'
     distinct_by_id = True
     identifier_copeople = api.copeople_view_per_identifier(
         identifier=identifier,
