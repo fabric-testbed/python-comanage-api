@@ -12,10 +12,15 @@ from examples import *
 # must be set ahead of time and be valid within the CO
 CO_PERSON_ID = 163
 
-# names_add() -> dict
+# names_add(person_type: str, person_id: int, given: str, family: str) -> dict
 print('### names_add')
 try:
-    new_name = api.names_add()
+    new_name = api.names_add(
+        person_type='copersonid',
+        person_id=CO_PERSON_ID,
+        given="TestGiven",
+        family="TestFamily"
+    ))
     print(json.dumps(new_name, indent=4))
 except HTTPError as err:
     print('[ERROR] Exception caught')
