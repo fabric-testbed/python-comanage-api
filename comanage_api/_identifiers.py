@@ -5,8 +5,7 @@ Identifier API - https://spaces.at.internet2.edu/display/COmanage/Identifier+API
 
 Methods
 -------
-identifiers_add() -> dict
-    ### NOT IMPLEMENTED ###
+identifiers_add(identity_type: str, identifier: str, login_flag: bool, person_type: str, person_id: int) -> dict
     Add a new Identifier.
 identifiers_assign() -> bool
     ### NOT IMPLEMENTED ###
@@ -28,18 +27,87 @@ identifiers_view_one(identifier_id: int) -> dict
 import json
 
 
-def identifiers_add(self) -> dict:
+def identifiers_add(self, identity_type: str, identifier: str, login_flag: bool, person_type: str, person_id: int) -> dict:
     """
-    ### NOT IMPLEMENTED ###
     Add a new Identifier.
 
-    :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
+    identity_type: Identifier keyword (i.e. eppn, sorid)
+    identifier: The actual identifier for the indentity_type
+    login_flag: Whether this identifier is used for logging in
+    person_type: Type of person (i.e. "CO"|"Dept"|"Group"|"Org"|"Organization")
+    person_id: COmanage ID for the person_type
+    :request
+    {
+    "RequestType":"Identifiers",
+    "Version":"1.0",
+    "Identifiers":
+    [
+        {
+        "Version":"1.0",
+        "Type":"<Type>",
+        "Identifier":"<Identifier>",
+        "Login":true|false,
+        "Person":
+        {
+            "Type":("CO"|"Dept"|"Group"|"Org"|"Organization"),
+            "Id":"<ID>"
+        },
+        "CoProvisioningTargetId":"<CoProvisioningTargetId>",
+        "Status":"Active"|"Deleted"
+        }
+    ]
+    }:
+
+    Response Format
+        HTTP Status                  Response Body        Description
+        201  Added                   NewObjectResponse    Identifier added
+        400  Bad Request                                  Identifier Request not
+                                                            provided in POST body
+        400  Invalid Fields          ErrorResponse        An error in one or more
+                                                            provided fields
+        401  Unauthorized                                 Authentication required
+        403  Identifier In Use                            An entry already exists with the
+                                                            specified identifier
+        403  No Person Specified                          A CO Department, a CO Person, or an
+                                                            Org Identity must be specified to
+                                                            attach
+                                                            the Identifier to
+        403  Person Does Not Exist                        The specified CO Department,
+                                                            CO Person, or Org Identity
+                                                            does not exist
+        500  Other Error                                  Unknown error
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
+    post_body = {
+        "RequestType":"Identifiers",
+        "Version":"1.0",
+        "Identifiers":
+        [
+            {
+                "Version":"1.0",
+                "Type":"<Type>",
+                "Identifier":"<Identifier>",
+                "Login":"<Login>",
+                "Person":
+                {
+                    "Type":"<Type>",
+                    "Id":"<ID>"
+                },
+                "Status":"Active"
+            }
+        ]
+    }
+
+    post_body['Identifiers'][0]['Type'] = identity_type
+    post_body['Identifiers'][0]['Identifier'] = identifier
+    post_body['Identifiers'][0]['Login'] = login_flag
+    post_body['Identifiers'][0]['Person']['Type'] = person_type
+    post_body['Identifiers'][0]['Person']['Id'] = person_id
+
+    post_body = json.dumps(post_body)
+    url = self._CO_API_URL + '/identifiers.json'
+    resp = self._s.post(
+        url=url,
+        data=post_body
     )
     if resp.status_code == 201:
         return json.loads(resp.text)

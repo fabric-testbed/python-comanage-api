@@ -247,8 +247,7 @@ EMAILADDRESS_OPTIONS = ['codeptid', 'copersonid', 'organizationid', 'orgidentity
 
 ### <a name="identifier"></a>[Identifier API](https://spaces.at.internet2.edu/display/COmanage/Identifier+API) (COmanage v3.3.0+)
 
-- `identifiers_add() -> dict`
-    - `### NOT IMPLEMENTED ###`
+- `identifiers_add(identity_type: str, identifier: str, login_flag: bool, person_type: str, person_id: int) -> dict`
     - Add a new Identifier.
 - `identifiers_assign() -> bool`
     - `### NOT IMPLEMENTED ###`
