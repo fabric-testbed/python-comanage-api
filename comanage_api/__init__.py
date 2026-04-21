@@ -1,6 +1,9 @@
 import json
+import logging
 
 from requests import Session
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from ._coorgidentitylinks import coorg_identity_links_add, coorg_identity_links_delete, coorg_identity_links_edit, \
     coorg_identity_links_view_all, coorg_identity_links_view_by_identity, coorg_identity_links_view_one
@@ -21,6 +24,11 @@ from ._sshkeys import ssh_keys_add, ssh_keys_delete, ssh_keys_edit, ssh_keys_vie
 
 # fabric-comanage-api version
 __VERSION__ = "0.1.5"
+
+# Library logging: NullHandler prevents "last resort" output for callers
+# who don't configure logging. Callers who want logs should add their own
+# handler to the 'comanage_api' logger.
+logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 
 class ComanageApi(object):
@@ -45,10 +53,14 @@ class ComanageApi(object):
         COmanage Org Name (required)
     co_ssh_key_authenticator_id: int = None
         SSH Authenticator Plugin ID (optional)
+    timeout: int = 30
+        HTTP request timeout in seconds (optional, default 30)
     """
 
+    _log = logging.getLogger(__name__)
+
     def __init__(self, co_api_url: str, co_api_user: str, co_api_pass: str, co_api_org_id: int,
-                 co_api_org_name: str, co_ssh_key_authenticator_id: int = None):
+                 co_api_org_name: str, co_ssh_key_authenticator_id: int = None, timeout: int = 30):
         # COmanage API user and pass
         self._CO_API_USER = str(co_api_user)
         self._CO_API_PASS = str(co_api_pass)
@@ -65,6 +77,8 @@ class ComanageApi(object):
             self._CO_SSH_KEY_AUTHENTICATOR_ID = int(co_ssh_key_authenticator_id)
         else:
             self._CO_SSH_KEY_AUTHENTICATOR_ID = 0
+        # HTTP request timeout
+        self._timeout = timeout
         # Status Type options
         self.STATUS_OPTIONS = ['Active', 'Approved', 'Confirmed', 'Declined', 'Deleted', 'Denied', 'Duplicate',
                                'Expired',
@@ -81,30 +95,59 @@ class ComanageApi(object):
         # SSH Key Type options
         self.SSH_KEY_OPTIONS = ['ssh-dss', 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384', 'ecdsa-sha2-nistp521',
                                 'ssh-ed25519', 'ssh-rsa', 'ssh-rsa1']
-        # create comanage_api session
+        # create comanage_api session with retry logic
+        retry = Retry(
+            total=3,
+            backoff_factor=1,
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=['GET', 'POST', 'PUT', 'DELETE'],
+        )
+        adapter = HTTPAdapter(max_retries=retry)
         self._s = Session()
+        self._s.mount('https://', adapter)
+        self._s.mount('http://', adapter)
         self._s.headers = {'Content-Type': 'application/json'}
         self._s.auth = (self._CO_API_USER, self._CO_API_PASS)
 
     # HTTP helpers
     def _get(self, path: str, params: dict = None) -> dict:
-        resp = self._s.get(f"{self._CO_API_URL}/{path}", params=params)
+        url = f"{self._CO_API_URL}/{path}"
+        self._log.debug('GET %s params=%s', url, params)
+        resp = self._s.get(url, params=params, timeout=self._timeout)
+        if not resp.ok:
+            self._log.warning('GET %s returned %s', url, resp.status_code)
         resp.raise_for_status()
+        self._log.info('GET %s OK', url)
         return resp.json()
 
     def _post(self, path: str, data: dict) -> dict:
-        resp = self._s.post(f"{self._CO_API_URL}/{path}", data=json.dumps(data))
+        url = f"{self._CO_API_URL}/{path}"
+        self._log.debug('POST %s', url)
+        resp = self._s.post(url, data=json.dumps(data), timeout=self._timeout)
+        if not resp.ok:
+            self._log.warning('POST %s returned %s', url, resp.status_code)
         resp.raise_for_status()
+        self._log.info('POST %s OK (%s)', url, resp.status_code)
         return resp.json()
 
     def _put(self, path: str, data: dict) -> bool:
-        resp = self._s.put(f"{self._CO_API_URL}/{path}", data=json.dumps(data))
+        url = f"{self._CO_API_URL}/{path}"
+        self._log.debug('PUT %s', url)
+        resp = self._s.put(url, data=json.dumps(data), timeout=self._timeout)
+        if not resp.ok:
+            self._log.warning('PUT %s returned %s', url, resp.status_code)
         resp.raise_for_status()
+        self._log.info('PUT %s OK', url)
         return True
 
     def _delete(self, path: str, params: dict = None) -> bool:
-        resp = self._s.delete(f"{self._CO_API_URL}/{path}", params=params)
+        url = f"{self._CO_API_URL}/{path}"
+        self._log.debug('DELETE %s params=%s', url, params)
+        resp = self._s.delete(url, params=params, timeout=self._timeout)
+        if not resp.ok:
+            self._log.warning('DELETE %s returned %s', url, resp.status_code)
         resp.raise_for_status()
+        self._log.info('DELETE %s OK', url)
         return True
 
     def _get_by_entity(self, path: str, entity_type: str, entity_id: int,

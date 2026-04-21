@@ -304,14 +304,19 @@ def ssh_keys_view_per_coperson(self, coperson_id: int) -> dict:
     """
     url = f"{self._CO_API_URL}/{_SSH_KEY_PATH}.json"
     params = {'copersonid': str(coperson_id)}
-    resp = self._s.get(url=url, params=params)
+    self._log.debug('GET %s params=%s', url, params)
+    resp = self._s.get(url=url, params=params, timeout=self._timeout)
     if resp.status_code == 204:
+        self._log.info('GET %s returned 204 (no SSH keys)', url)
         return {
             'RequestType': 'SshKeys',
             'Version': '1.0',
             'SshKeys': []
         }
+    if not resp.ok:
+        self._log.warning('GET %s returned %s', url, resp.status_code)
     resp.raise_for_status()
+    self._log.info('GET %s OK', url)
     return resp.json()
 
 

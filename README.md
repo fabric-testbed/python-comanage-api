@@ -42,8 +42,18 @@ api = ComanageApi(
     co_api_pass=COMANAGE_API_PASS,
     co_api_org_id=COMANAGE_API_CO_ID,
     co_api_org_name=COMANAGE_API_CO_NAME,
-    co_ssh_key_authenticator_id=COMANAGE_API_SSH_KEY_AUTHENTICATOR_ID
+    co_ssh_key_authenticator_id=COMANAGE_API_SSH_KEY_AUTHENTICATOR_ID,
+    timeout=30  # optional, HTTP request timeout in seconds (default: 30)
 )
+```
+
+**Built-in robustness:** All HTTP requests include a configurable timeout (default 30s) and automatic retry with exponential backoff on transient failures (429, 500, 502, 503, 504).
+
+**Logging:** The library uses Python's standard `logging` module under the `comanage_api` logger. No output is produced by default. To enable:
+
+```python
+import logging
+logging.basicConfig(level=logging.DEBUG)
 ```
 
 Get some data! (example using `cous_view_per_co()` which retrieves all COUs attached to a given CO)
@@ -57,7 +67,8 @@ Get some data! (example using `cous_view_per_co()` which retrieves all COUs atta
 ...     co_api_pass='xxxx-xxxx-xxxx-xxxx',
 ...     co_api_org_id='123',
 ...     co_api_org_name='RegistryName',
-...     co_ssh_key_authenticator_id='123'
+...     co_ssh_key_authenticator_id='123',
+...     timeout=30
 ... )
 >>>
 >>> cous = api.cous_view_per_co()

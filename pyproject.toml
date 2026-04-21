@@ -36,6 +36,9 @@ dev = [
 Homepage = "https://github.com/fabric-testbed/python-comanage-api"
 Repository = "https://github.com/fabric-testbed/python-comanage-api"
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
 [tool.setuptools.dynamic]
 version = { attr = "comanage_api.__VERSION__" }
 
