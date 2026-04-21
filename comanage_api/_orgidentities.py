@@ -27,8 +27,6 @@ org_identities_view_one(org_identity_id: int) -> dict
     Retrieve an existing Organizational Identity.
 """
 
-import json
-
 
 def org_identities_add(self) -> dict:
     """
@@ -36,17 +34,8 @@ def org_identities_add(self) -> dict:
     Add a new Organizational Identity. A person must have an OrgIdentity before they can be added to a CO.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 201:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("org_identities_add() is not implemented")
 
 
 def org_identities_delete(self) -> bool:
@@ -57,17 +46,8 @@ def org_identities_delete(self) -> bool:
     This method will also delete related data, such as Addresses, EmailAddresses, and TelephoneNumbers.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("org_identities_delete() is not implemented")
 
 
 def org_identities_edit(self) -> bool:
@@ -76,22 +56,13 @@ def org_identities_edit(self) -> bool:
     Edit an existing Organizational Identity.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("org_identities_edit() is not implemented")
 
 
 def org_identities_view_all(self) -> dict:
     """
-    Retrieve all existing EmailAddresses.
+    Retrieve all existing Organizational Identities.
 
     :param self:
     :return
@@ -124,14 +95,7 @@ def org_identities_view_all(self) -> dict:
         401 Unauthorized                            Authentication required
         500 Other Error                             Unknown error
     """
-    url = self._CO_API_URL + '/org_identities.json'
-    resp = self._s.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get('org_identities.json')
 
 
 def org_identities_view_per_co(self) -> dict:
@@ -170,16 +134,7 @@ def org_identities_view_per_co(self) -> dict:
         404 CO Unknown                              id not found
         500 Other Error                             Unknown error
     """
-    url = self._CO_API_URL + '/org_identities.json'
-    params = {'coid': self._CO_API_ORG_ID}
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get('org_identities.json', params={'coid': self._CO_API_ORG_ID})
 
 
 def org_identities_view_per_identifier(self, identifier_id: int) -> dict:
@@ -220,16 +175,10 @@ def org_identities_view_per_identifier(self, identifier_id: int) -> dict:
         404 CO Unknown                              id not found
         500 Other Error                             Unknown error
     """
-    url = self._CO_API_URL + '/org_identities.json'
-    params = {'coid': self._CO_API_ORG_ID, 'search.identifier': int(identifier_id)}
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get('org_identities.json', params={
+        'coid': self._CO_API_ORG_ID,
+        'search.identifier': int(identifier_id)
+    })
 
 
 def org_identities_view_one(self, org_identity_id: int) -> dict:
@@ -268,13 +217,4 @@ def org_identities_view_one(self, org_identity_id: int) -> dict:
         404 OrgIdentity Unknown                                 id not found
         500 Other Error                                         Unknown error
     """
-    url = self._CO_API_URL + '/org_identities/' + str(org_identity_id) + '.json'
-    params = {'coid': self._CO_API_ORG_ID}
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get(f'org_identities/{org_identity_id}.json', params={'coid': self._CO_API_ORG_ID})

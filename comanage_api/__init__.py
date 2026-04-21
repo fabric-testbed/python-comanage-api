@@ -1,4 +1,5 @@
-import requests_mock
+import json
+
 from requests import Session
 
 from ._coorgidentitylinks import coorg_identity_links_add, coorg_identity_links_delete, coorg_identity_links_edit, \
@@ -80,17 +81,41 @@ class ComanageApi(object):
         # SSH Key Type options
         self.SSH_KEY_OPTIONS = ['ssh-dss', 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384', 'ecdsa-sha2-nistp521',
                                 'ssh-ed25519', 'ssh-rsa', 'ssh-rsa1']
-        # create mock response session
-        self._mock_session = Session()
-        self._adapter = requests_mock.Adapter()
-        self._mock_session.mount('mock://', self._adapter)
-        # add mock adapters
-        self._MOCK_501_URL = 'mock://not_implemented_501.local'
-        self._adapter.register_uri('GET', self._MOCK_501_URL, reason='Not Implemented', status_code=501)
         # create comanage_api session
         self._s = Session()
         self._s.headers = {'Content-Type': 'application/json'}
         self._s.auth = (self._CO_API_USER, self._CO_API_PASS)
+
+    # HTTP helpers
+    def _get(self, path: str, params: dict = None) -> dict:
+        resp = self._s.get(f"{self._CO_API_URL}/{path}", params=params)
+        resp.raise_for_status()
+        return resp.json()
+
+    def _post(self, path: str, data: dict) -> dict:
+        resp = self._s.post(f"{self._CO_API_URL}/{path}", data=json.dumps(data))
+        resp.raise_for_status()
+        return resp.json()
+
+    def _put(self, path: str, data: dict) -> bool:
+        resp = self._s.put(f"{self._CO_API_URL}/{path}", data=json.dumps(data))
+        resp.raise_for_status()
+        return True
+
+    def _delete(self, path: str, params: dict = None) -> bool:
+        resp = self._s.delete(f"{self._CO_API_URL}/{path}", params=params)
+        resp.raise_for_status()
+        return True
+
+    def _get_by_entity(self, path: str, entity_type: str, entity_id: int,
+                       valid_options: list, field_name: str) -> dict:
+        if not entity_type:
+            entity_type = 'copersonid'
+        else:
+            entity_type = str(entity_type).lower()
+        if entity_type not in valid_options:
+            raise ValueError(f"Invalid Fields '{field_name}'")
+        return self._get(path, params={entity_type: str(entity_id)})
 
     # CoOrgIdentityLink API
     def coorg_identity_links_add(self):

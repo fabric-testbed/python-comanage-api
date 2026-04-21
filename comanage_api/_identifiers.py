@@ -25,8 +25,6 @@ identifiers_view_one(identifier_id: int) -> dict
     Retrieve an existing Identifier.
 """
 
-import json
-
 
 def identifiers_add(self) -> dict:
     """
@@ -34,17 +32,8 @@ def identifiers_add(self) -> dict:
     Add a new Identifier.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 201:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("identifiers_add() is not implemented")
 
 
 def identifiers_assign(self) -> bool:
@@ -53,17 +42,8 @@ def identifiers_assign(self) -> bool:
     Assign Identifiers for a CO Person.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("identifiers_assign() is not implemented")
 
 
 def identifiers_delete(self) -> bool:
@@ -72,17 +52,8 @@ def identifiers_delete(self) -> bool:
     Remove an Identifier.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("identifiers_delete() is not implemented")
 
 
 def identifiers_edit(self) -> bool:
@@ -91,17 +62,8 @@ def identifiers_edit(self) -> bool:
     Edit an existing Identifier.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("identifiers_edit() is not implemented")
 
 
 def identifiers_view_all(self) -> dict:
@@ -137,14 +99,7 @@ def identifiers_view_all(self) -> dict:
         401 Unauthorized                            Authentication required
         500 Other Error                             Unknown error
     """
-    url = self._CO_API_URL + '/identifiers.json'
-    resp = self._s.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get('identifiers.json')
 
 
 def identifiers_view_per_entity(self, entity_type: str, entity_id: int) -> dict:
@@ -197,22 +152,8 @@ def identifiers_view_per_entity(self, entity_type: str, entity_id: int) -> dict:
         404 Org Identity Unknown                            id not found for Org Identity
         500 Other Error                                     Unknown error
     """
-    if not entity_type:
-        entity_type = 'copersonid'
-    else:
-        entity_type = str(entity_type).lower()
-    if entity_type not in self.ENTITY_OPTIONS:
-        raise TypeError("Invalid Fields 'entity_type'")
-    url = self._CO_API_URL + '/identifiers.json'
-    params = {str(entity_type): str(entity_id)}
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get_by_entity('identifiers.json', entity_type, entity_id,
+                               self.ENTITY_OPTIONS, 'entity_type')
 
 
 def identifiers_view_one(self, identifier_id: int) -> dict:
@@ -250,11 +191,4 @@ def identifiers_view_one(self, identifier_id: int) -> dict:
         404 Identifier Unknown                              id not found
         500 Other Error                                     Unknown error
     """
-    url = self._CO_API_URL + '/identifiers/' + str(identifier_id) + '.json'
-    resp = self._s.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get(f'identifiers/{identifier_id}.json')

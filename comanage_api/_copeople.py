@@ -36,8 +36,6 @@ copeople_view_one(coperson_id: int) -> dict
     Retrieve an existing CO Person.
 """
 
-import json
-
 
 def copeople_add(self) -> dict:
     """
@@ -46,17 +44,8 @@ def copeople_add(self) -> dict:
     Note that linking to an OrgIdentity and invitations are separate operations.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 201:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("copeople_add() is not implemented")
 
 
 def copeople_delete(self) -> bool:
@@ -67,17 +56,8 @@ def copeople_delete(self) -> bool:
     before the OrgIdentity record can be removed.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("copeople_delete() is not implemented")
 
 
 def copeople_edit(self) -> bool:
@@ -86,17 +66,8 @@ def copeople_edit(self) -> bool:
     Edit an existing CO Person.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("copeople_edit() is not implemented")
 
 
 def copeople_find(self) -> dict:
@@ -106,17 +77,14 @@ def copeople_find(self) -> dict:
     When too many records are found, a message may be returned rather than specific records.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("copeople_find() is not implemented")
+
+
+def _deduplicate_copeople(resp_dict: dict) -> dict:
+    distinct_copeople = list({v['Id']: v for v in resp_dict.get('CoPeople')}.values())
+    resp_dict['CoPeople'] = distinct_copeople
+    return resp_dict
 
 
 def copeople_match(self, given: str = None, family: str = None, mail: str = None, distinct_by_id: bool = True) -> dict:
@@ -155,28 +123,17 @@ def copeople_match(self, given: str = None, family: str = None, mail: str = None
                                                             -- unknown CO will return an empty set
         500 Other Error                                 Unknown error
     """
-    url = self._CO_API_URL + '/co_people.json'
     params = {'coid': self._CO_API_ORG_ID}
     if given:
-        params.update({'given': given})
+        params['given'] = given
     if family:
-        params.update({'family': family})
+        params['family'] = family
     if mail:
-        params.update({'mail': mail})
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        if distinct_by_id:
-            resp_dict = json.loads(resp.text)
-            distinct_copeople = list({v['Id']: v for v in resp_dict.get('CoPeople')}.values())
-            resp_dict['CoPeople'] = distinct_copeople
-            return resp_dict
-        else:
-            return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+        params['mail'] = mail
+    resp_dict = self._get('co_people.json', params=params)
+    if distinct_by_id:
+        return _deduplicate_copeople(resp_dict)
+    return resp_dict
 
 
 def copeople_view_all(self) -> dict:
@@ -207,14 +164,7 @@ def copeople_view_all(self) -> dict:
         401 Unauthorized                                Authentication required
         500 Other Error                                 Unknown error
     """
-    url = self._CO_API_URL + '/co_people.json'
-    resp = self._s.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get('co_people.json')
 
 
 def copeople_view_per_co(self) -> dict:
@@ -247,16 +197,7 @@ def copeople_view_per_co(self) -> dict:
                                                             -- unknown CO will return an empty set
         500 Other Error                                 Unknown error
     """
-    url = self._CO_API_URL + '/co_people.json'
-    params = {'coid': self._CO_API_ORG_ID}
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get('co_people.json', params={'coid': self._CO_API_ORG_ID})
 
 
 def copeople_view_per_identifier(self, identifier: str, distinct_by_id: bool = True) -> dict:
@@ -291,22 +232,11 @@ def copeople_view_per_identifier(self, identifier: str, distinct_by_id: bool = T
         404 CO Unknown                                      id not found
         500 Other Error                                     Unknown error
     """
-    url = self._CO_API_URL + '/co_people.json'
     params = {'coid': self._CO_API_ORG_ID, 'search.identifier': identifier}
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        if distinct_by_id:
-            resp_dict = json.loads(resp.text)
-            distinct_copeople = list({v['Id']: v for v in resp_dict.get('CoPeople')}.values())
-            resp_dict['CoPeople'] = distinct_copeople
-            return resp_dict
-        else:
-            return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    resp_dict = self._get('co_people.json', params=params)
+    if distinct_by_id:
+        return _deduplicate_copeople(resp_dict)
+    return resp_dict
 
 
 def copeople_view_one(self, coperson_id: int) -> dict:
@@ -339,13 +269,4 @@ def copeople_view_one(self, coperson_id: int) -> dict:
         404 copeople Unknown                                id not found
         500 Other Error                                     Unknown error
     """
-    url = self._CO_API_URL + '/co_people/' + str(coperson_id) + '.json'
-    params = {'coid': self._CO_API_ORG_ID}
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get(f'co_people/{coperson_id}.json', params={'coid': self._CO_API_ORG_ID})

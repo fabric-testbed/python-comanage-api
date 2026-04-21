@@ -19,8 +19,6 @@ cous_view_one(cou_id: int) -> dict
     Retrieve an existing Cou.
 """
 
-import json
-
 
 def cous_add(self, name: str, description: str, parent_id: int = None) -> dict:
     """
@@ -69,31 +67,19 @@ def cous_add(self, name: str, description: str, parent_id: int = None) -> dict:
         403 Wrong CO                                                Parent/Child COU not member of same CO
         500 Other Error                                             Unknown error
     """
-    post_body = {
-        'RequestType': 'Cous',
+    cou = {
         'Version': '1.0',
-        'Cous':
-            [
-                {
-                    'Version': '1.0',
-                    'CoId': self._CO_API_ORG_ID,
-                    'Name': str(name),
-                    'Description': str(description)
-                }
-            ]
+        'CoId': self._CO_API_ORG_ID,
+        'Name': str(name),
+        'Description': str(description)
     }
     if parent_id:
-        post_body['Cous'][0]['ParentId'] = str(parent_id)
-    post_body = json.dumps(post_body)
-    url = self._CO_API_URL + '/cous.json'
-    resp = self._s.post(
-        url=url,
-        data=post_body
-    )
-    if resp.status_code == 201:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+        cou['ParentId'] = str(parent_id)
+    return self._post('cous.json', {
+        'RequestType': 'Cous',
+        'Version': '1.0',
+        'Cous': [cou]
+    })
 
 
 def cous_delete(self, cou_id: int) -> bool:
@@ -114,16 +100,7 @@ def cous_delete(self, cou_id: int) -> bool:
         404 Identifier Unknown                          id not found
         500 Other Error                                 Unknown error
     """
-    url = self._CO_API_URL + '/cous/' + str(cou_id) + '.json'
-    params = {'coid': self._CO_API_ORG_ID}
-    resp = self._s.delete(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    return self._delete(f'cous/{cou_id}.json', params={'coid': self._CO_API_ORG_ID})
 
 
 def cous_edit(self, cou_id: int, name: str = None, description: str = None, parent_id: int = None) -> bool:
@@ -173,43 +150,26 @@ def cous_edit(self, cou_id: int, name: str = None, description: str = None, pare
         404 Identifier Unknown                                      id not found
         500 Other Error                                             Unknown error
     """
-    cou = cous_view_one(self, cou_id)
-    post_body = {
+    existing = cous_view_one(self, cou_id)
+    existing_cou = existing.get('Cous')[0]
+    cou = {
+        'Version': '1.0',
+        'CoId': self._CO_API_ORG_ID,
+        'Name': str(name) if name else existing_cou.get('Name'),
+        'Description': str(description) if description else existing_cou.get('Description')
+    }
+    if parent_id is not None and parent_id != 0:
+        cou['ParentId'] = str(parent_id)
+    elif parent_id == 0:
+        cou['ParentId'] = ''
+    else:
+        if existing_cou.get('ParentId'):
+            cou['ParentId'] = str(existing_cou.get('ParentId'))
+    return self._put(f'cous/{cou_id}.json', {
         'RequestType': 'Cous',
         'Version': '1.0',
-        'Cous':
-            [
-                {
-                    'Version': '1.0',
-                    'CoId': self._CO_API_ORG_ID
-                }
-            ]
-    }
-    if name:
-        post_body['Cous'][0]['Name'] = str(name)
-    else:
-        post_body['Cous'][0]['Name'] = cou.get('Cous')[0].get('Name')
-    if description:
-        post_body['Cous'][0]['Description'] = str(description)
-    else:
-        post_body['Cous'][0]['Description'] = cou.get('Cous')[0].get('Description')
-    if parent_id:
-        post_body['Cous'][0]['ParentId'] = str(parent_id)
-    else:
-        if cou.get('Cous')[0].get('ParentId'):
-            post_body['Cous'][0]['ParentId'] = str(cou.get('Cous')[0].get('ParentId'))
-        if str(parent_id) == '0':
-            post_body['Cous'][0]['ParentId'] = ''
-    post_body = json.dumps(post_body)
-    url = self._CO_API_URL + '/cous/' + str(cou_id) + '.json'
-    resp = self._s.put(
-        url=url,
-        data=post_body
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+        'Cous': [cou]
+    })
 
 
 def cous_view_all(self) -> dict:
@@ -248,14 +208,7 @@ def cous_view_all(self) -> dict:
         401 Unauthorized                        Authentication required
         500 Other Error                         Unknown error
     """
-    url = self._CO_API_URL + '/cous.json'
-    resp = self._s.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get('cous.json')
 
 
 def cous_view_per_co(self) -> dict:
@@ -295,16 +248,7 @@ def cous_view_per_co(self) -> dict:
         404 CO Unknown                          id not found
         500 Other Error                         Unknown error
     """
-    url = self._CO_API_URL + '/cous.json'
-    params = {'coid': self._CO_API_ORG_ID}
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get('cous.json', params={'coid': self._CO_API_ORG_ID})
 
 
 def cous_view_one(self, cou_id: int) -> dict:
@@ -342,13 +286,4 @@ def cous_view_one(self, cou_id: int) -> dict:
         404 COU Unknown                         id not found
         500 Other Error                         Unknown error
     """
-    url = self._CO_API_URL + '/cous/' + str(cou_id) + '.json'
-    params = {'coid': self._CO_API_ORG_ID}
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get(f'cous/{cou_id}.json', params={'coid': self._CO_API_ORG_ID})

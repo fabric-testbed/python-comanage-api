@@ -22,8 +22,6 @@ names_view_one(name_id: int) -> dict
     Retrieve Names attached to a CO Person or Org Identity.
 """
 
-import json
-
 
 def names_add(self) -> dict:
     """
@@ -31,17 +29,8 @@ def names_add(self) -> dict:
     Add a new Name.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 201:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("names_add() is not implemented")
 
 
 def names_delete(self) -> bool:
@@ -50,17 +39,8 @@ def names_delete(self) -> bool:
     Remove a Name.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("names_delete() is not implemented")
 
 
 def names_edit(self) -> bool:
@@ -69,17 +49,8 @@ def names_edit(self) -> bool:
     Edit an existing Name.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("names_edit() is not implemented")
 
 
 def names_view_all(self) -> dict:
@@ -122,14 +93,7 @@ def names_view_all(self) -> dict:
         401 Unauthorized                            Authentication required
         500 Other Error                             Unknown error
     """
-    url = self._CO_API_URL + '/names.json'
-    resp = self._s.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get('names.json')
 
 
 def names_view_per_person(self, person_type: str, person_id: int) -> dict:
@@ -176,22 +140,8 @@ def names_view_per_person(self, person_type: str, person_id: int) -> dict:
         404 Org Identity Unknown                            id not found for Org Identity
         500 Other Error                                     Unknown error
     """
-    if not person_type:
-        person_type = 'copersonid'
-    else:
-        person_type = str(person_type).lower()
-    if person_type not in self.PERSON_OPTIONS:
-        raise TypeError("Invalid Fields 'person_type'")
-    url = self._CO_API_URL + '/names.json'
-    params = {str(person_type): str(person_id)}
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get_by_entity('names.json', person_type, person_id,
+                               self.PERSON_OPTIONS, 'person_type')
 
 
 def names_view_one(self, name_id: int) -> dict:
@@ -236,11 +186,4 @@ def names_view_one(self, name_id: int) -> dict:
         404 Name Unknown                                    id not found
         500 Other Error                                     Unknown error
     """
-    url = self._CO_API_URL + '/names/' + str(name_id) + '.json'
-    resp = self._s.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get(f'names/{name_id}.json')

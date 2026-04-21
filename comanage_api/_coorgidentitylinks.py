@@ -24,8 +24,6 @@ coorg_identity_links_view_one(org_identity_id: int) -> dict
     Retrieve an existing CO Identity Link.
 """
 
-import json
-
 
 def coorg_identity_links_add(self) -> dict:
     """
@@ -35,17 +33,8 @@ def coorg_identity_links_add(self) -> dict:
     Note that invitations are a separate operation.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 201:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("coorg_identity_links_add() is not implemented")
 
 
 def coorg_identity_links_delete(self) -> bool:
@@ -54,17 +43,8 @@ def coorg_identity_links_delete(self) -> bool:
     Remove a CO Org Identity Link.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("coorg_identity_links_delete() is not implemented")
 
 
 def coorg_identity_links_edit(self) -> bool:
@@ -73,17 +53,8 @@ def coorg_identity_links_edit(self) -> bool:
     Edit an existing CO Identity Link.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("coorg_identity_links_edit() is not implemented")
 
 
 def coorg_identity_links_view_all(self) -> dict:
@@ -115,15 +86,7 @@ def coorg_identity_links_view_all(self) -> dict:
         401 Unauthorized                                    Authentication required
         500 Other Error                                     Unknown error
     """
-    url = self._CO_API_URL + '/co_org_identity_links.json'
-    resp = self._s.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
-
+    return self._get('co_org_identity_links.json')
 
 
 def coorg_identity_links_view_by_identity(self, identity_type: str, identity_id: int) -> dict:
@@ -159,22 +122,8 @@ def coorg_identity_links_view_by_identity(self, identity_type: str, identity_id:
         404 Org Identity Unknown                                    orgidentityid not found
         500 Other Error                                             Unknown error
     """
-    if not identity_type:
-        identity_type = 'copersonid'
-    else:
-        identity_type = str(identity_type).lower()
-    if identity_type not in self.PERSON_OPTIONS:
-        raise TypeError("Invalid Fields 'identity_type'")
-    url = self._CO_API_URL + '/co_org_identity_links.json'
-    params = {str(identity_type): str(identity_id)}
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get_by_entity('co_org_identity_links.json', identity_type, identity_id,
+                               self.PERSON_OPTIONS, 'identity_type')
 
 
 def coorg_identity_links_view_one(self, coorg_identity_link_id: int) -> dict:
@@ -207,11 +156,4 @@ def coorg_identity_links_view_one(self, coorg_identity_link_id: int) -> dict:
         404 CoOrgIdentityLink Unknown                                   id not found
         500 Other Error                                                 Unknown error
     """
-    url = self._CO_API_URL + '/co_org_identity_links/' + str(coorg_identity_link_id) + '.json'
-    resp = self._s.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get(f'co_org_identity_links/{coorg_identity_link_id}.json')

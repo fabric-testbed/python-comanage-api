@@ -49,11 +49,6 @@ api = ComanageApi(
 Get some data! (example using `cous_view_per_co()` which retrieves all COUs attached to a given CO)
 
 ```python
-$ python
-Python 3.9.6 (v3.9.6:db3ff76da1, Jun 28 2021, 11:49:53)
-[Clang 6.0 (clang-600.0.57)] on darwin
-Type "help", "copyright", "credits" or "license" for more information.
->>>
 >>> from comanage_api import ComanageApi
 >>>
 >>> api = ComanageApi(
@@ -117,8 +112,8 @@ Return types based on implementation status of wrapped API endpoints
     - `-> dict`: Data is returned as a Python [Dictionary](https://docs.python.org/3/c-api/dict.html) object
     - `-> bool`: Success/Failure is returned as Python [Boolean](https://docs.python.org/3/c-api/bool.html) object
 - Not Implemented (`### NOT IMPLEMENTED ###`): 
-    - `-> dict`: raise exception (`HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local`)
-    - `-> bool`: raise exception (`HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local`)
+    - `-> dict`: raises `NotImplementedError`
+    - `-> bool`: raises `NotImplementedError`
 
 ### <a name="coorgidentitylink"></a>[CoOrgIdentityLink API](https://spaces.at.internet2.edu/display/COmanage/CoOrgIdentityLink+API) (COmanage v4.0.0+)
 
@@ -346,27 +341,21 @@ SSH_KEY_OPTIONS = ['ssh-dss', 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384',
 
 ## <a name="usage"></a>Usage
 
-Set up a virtual environment (`virtualenv` is used in these examples)
+### Install
 
-```console
-virtualenv -p /usr/local/bin/python3 venv
-source venv/bin/activate
-```
-
-### Install supporting packages
-
-Install from PyPi
+Install from PyPI:
 
 ```console
 pip install fabric-comanage-api
 ```
 
-**OR** 
+### Development setup
 
-Install for Local Development
+This project uses [uv](https://docs.astral.sh/uv/) for dependency management. To set up a development environment:
 
 ```console
-pip install -r requirements.txt
+uv venv --python 3.12
+uv pip install -e ".[dev]"
 ```
 
 ### Configure your environment

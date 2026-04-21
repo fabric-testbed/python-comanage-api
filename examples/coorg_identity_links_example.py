@@ -9,58 +9,52 @@ sys.path.append(
 )
 from examples import *
 
-# must be set ahead of time and be valid within the CO
-IDENTITY_TYPE = 'orgidentityid'
-IDENTITY_ID = 190
-
-# coorg_identity_links_add, coorg_identity_links_delete, coorg_identity_links_edit, \
-#     coorg_identity_links_view_all, coorg_identity_links_view_by_identity, coorg_identity_links_view_one
-
 # coorg_identity_links_add() -> dict
 print('### coorg_identity_links_add')
 try:
     new_coorg_identity_link = api.coorg_identity_links_add()
     print(json.dumps(new_coorg_identity_link, indent=4))
-except HTTPError as err:
-    print('[ERROR] Exception caught')
-    print('--> ', type(err).__name__, '-', err)
+except NotImplementedError as err:
+    print('[NOT IMPLEMENTED] ', type(err).__name__, '-', err)
 
 # coorg_identity_links_delete() -> bool
 print('### coorg_identity_links_delete')
 try:
     delete_coorg_identity_link = api.coorg_identity_links_delete()
     print(json.dumps(delete_coorg_identity_link, indent=4))
-except HTTPError as err:
-    print('[ERROR] Exception caught')
-    print('--> ', type(err).__name__, '-', err)
+except NotImplementedError as err:
+    print('[NOT IMPLEMENTED] ', type(err).__name__, '-', err)
 
 # coorg_identity_links_edit() -> bool
 print('### coorg_identity_links_edit')
 try:
     edit_coorg_identity_link = api.coorg_identity_links_edit()
     print(json.dumps(edit_coorg_identity_link, indent=4))
-except HTTPError as err:
-    print('[ERROR] Exception caught')
-    print('--> ', type(err).__name__, '-', err)
+except NotImplementedError as err:
+    print('[NOT IMPLEMENTED] ', type(err).__name__, '-', err)
 
-# coorg_identity_links_view_all() -> dict
-print('### coorg_identity_links_view_all')
+# dynamically discover a valid CO Person ID for view_by_identity
+print('### discover CO Person ID')
 try:
-    all_coorg_identity_links = api.coorg_identity_links_view_all()
-    print(json.dumps(all_coorg_identity_links, indent=4))
-except HTTPError as err:
-    print('[ERROR] Exception caught')
+    per_co_copeople = api.copeople_view_per_co()
+    CO_PERSON_ID = int(per_co_copeople['CoPeople'][0]['Id'])
+    print('Using CO Person ID: ' + str(CO_PERSON_ID))
+except (KeyError, IndexError, HTTPError) as err:
+    print('[ERROR] Could not discover a CO Person ID')
     print('--> ', type(err).__name__, '-', err)
+    CO_PERSON_ID = None
 
 # coorg_identity_links_view_by_identity(self, identity_type: str, identity_id: int) -> dict
 print('### coorg_identity_links_view_by_identity')
 try:
+    IDENTITY_ID = CO_PERSON_ID
+    IDENTITY_TYPE = 'copersonid'
     per_identity_coorg_identity_links = api.coorg_identity_links_view_by_identity(
         identity_type=IDENTITY_TYPE,
         identity_id=IDENTITY_ID
     )
     print(json.dumps(per_identity_coorg_identity_links, indent=4))
-except (TypeError, HTTPError) as err:
+except (NameError, KeyError, IndexError, ValueError, HTTPError) as err:
     print('[ERROR] Exception caught')
     print('--> ', type(err).__name__, '-', err)
 
@@ -69,8 +63,8 @@ print('### coorg_identity_links_view_one')
 try:
     # get first CoOrgIdentityLinks['Id'] from per_identity_coorg_identity_links response
     coorg_identity_link_id = int(per_identity_coorg_identity_links['CoOrgIdentityLinks'][0]['Id'])
-    one_email_address = api.coorg_identity_links_view_one(coorg_identity_link_id=coorg_identity_link_id)
-    print(json.dumps(one_email_address, indent=4))
-except (NameError, KeyError, IndexError, TypeError, HTTPError) as err:
+    one_coorg_identity_link = api.coorg_identity_links_view_one(coorg_identity_link_id=coorg_identity_link_id)
+    print(json.dumps(one_coorg_identity_link, indent=4))
+except (NameError, KeyError, IndexError, ValueError, HTTPError) as err:
     print('[ERROR] Exception caught')
     print('--> ', type(err).__name__, '-', err)

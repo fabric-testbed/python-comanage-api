@@ -22,8 +22,6 @@ email_addresses_view_one(email_address_id: int) -> dict
     Retrieve an existing EmailAddress.
 """
 
-import json
-
 
 def email_addresses_add(self) -> dict:
     """
@@ -31,17 +29,8 @@ def email_addresses_add(self) -> dict:
     Add a new EmailAddress.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 201:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("email_addresses_add() is not implemented")
 
 
 def email_addresses_delete(self) -> bool:
@@ -50,17 +39,8 @@ def email_addresses_delete(self) -> bool:
     Remove an EmailAddress.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("email_addresses_delete() is not implemented")
 
 
 def email_addresses_edit(self) -> bool:
@@ -69,17 +49,8 @@ def email_addresses_edit(self) -> bool:
     Edit an existing EmailAddress.
 
     :param self:
-    :return
-        501 Server Error: Not Implemented for url: mock://not_implemented_501.local:
     """
-    url = self._MOCK_501_URL
-    resp = self._mock_session.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    raise NotImplementedError("email_addresses_edit() is not implemented")
 
 
 def email_addresses_view_all(self) -> dict:
@@ -118,14 +89,7 @@ def email_addresses_view_all(self) -> dict:
         401 Unauthorized                            Authentication required
         500 Other Error                             Unknown error
     """
-    url = self._CO_API_URL + '/email_addresses.json'
-    resp = self._s.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get('email_addresses.json')
 
 
 def email_addresses_view_per_person(self, person_type: str, person_id: int) -> dict:
@@ -178,22 +142,8 @@ def email_addresses_view_per_person(self, person_type: str, person_id: int) -> d
         404 Org Identity Unknown                            id not found for Org Identity
         500 Other Error                                     Unknown error
     """
-    if not person_type:
-        person_type = 'copersonid'
-    else:
-        person_type = str(person_type).lower()
-    if person_type not in self.EMAILADDRESS_OPTIONS:
-        raise TypeError("Invalid Fields 'person_type'")
-    url = self._CO_API_URL + '/email_addresses.json'
-    params = {str(person_type): str(person_id)}
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get_by_entity('email_addresses.json', person_type, person_id,
+                               self.EMAILADDRESS_OPTIONS, 'person_type')
 
 
 def email_addresses_view_one(self, email_address_id: int) -> dict:
@@ -233,11 +183,4 @@ def email_addresses_view_one(self, email_address_id: int) -> dict:
         404 EmailAddress Unknown                                id not found
         500 Other Error                                         Unknown error
     """
-    url = self._CO_API_URL + '/email_addresses/' + str(email_address_id) + '.json'
-    resp = self._s.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get(f'email_addresses/{email_address_id}.json')

@@ -22,8 +22,6 @@ coperson_roles_view_one(coperson_role_id: int) -> dict
     Retrieve an existing CO Person Role.
 """
 
-import json
-
 
 def coperson_roles_add(self, coperson_id: int, cou_id: int, status: str = None, affiliation: str = None) -> dict:
     """
@@ -85,45 +83,33 @@ def coperson_roles_add(self, coperson_id: int, cou_id: int, status: str = None, 
         403 COU Does Not Exist                                      The specified COU does not exist
         500 Other Error                                             Unknown error
     """
-    post_body = {
-        'RequestType': 'CoPersonRoles',
+    role = {
         'Version': '1.0',
-        'CoPersonRoles': [
-            {
-                'Version': '1.0',
-                'Person':
-                    {
-                        'Type': 'CO',
-                        'Id': str(coperson_id)
-                    },
-                'CouId': str(cou_id),
-                'O': str(self._CO_API_ORG_NAME)
-            }
-        ]
+        'Person': {
+            'Type': 'CO',
+            'Id': str(coperson_id)
+        },
+        'CouId': str(cou_id),
+        'O': str(self._CO_API_ORG_NAME)
     }
     if status:
         if status not in self.STATUS_OPTIONS:
-            raise TypeError("Invalid Fields 'status'")
-        post_body['CoPersonRoles'][0]['Status'] = str(status)
+            raise ValueError("Invalid Fields 'status'")
+        role['Status'] = str(status)
     else:
-        post_body['CoPersonRoles'][0]['Status'] = 'Active'
+        role['Status'] = 'Active'
     if affiliation:
         affiliation = str(affiliation).lower()
         if affiliation not in self.AFFILIATION_OPTIONS:
-            raise TypeError("Invalid Fields 'affiliation'")
-        post_body['CoPersonRoles'][0]['Affiliation'] = str(affiliation)
+            raise ValueError("Invalid Fields 'affiliation'")
+        role['Affiliation'] = str(affiliation)
     else:
-        post_body['CoPersonRoles'][0]['Affiliation'] = 'member'
-    post_body = json.dumps(post_body)
-    url = self._CO_API_URL + '/co_person_roles.json'
-    resp = self._s.post(
-        url=url,
-        data=post_body
-    )
-    if resp.status_code == 201:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+        role['Affiliation'] = 'member'
+    return self._post('co_person_roles.json', {
+        'RequestType': 'CoPersonRoles',
+        'Version': '1.0',
+        'CoPersonRoles': [role]
+    })
 
 
 def coperson_roles_delete(self, coperson_role_id: int) -> bool:
@@ -142,14 +128,7 @@ def coperson_roles_delete(self, coperson_role_id: int) -> bool:
         404 CoPersonRole Unknown                        id not found
         500 Other Error                                 Unknown error
     """
-    url = self._CO_API_URL + '/co_person_roles/' + str(coperson_role_id) + '.json'
-    resp = self._s.delete(
-        url=url
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+    return self._delete(f'co_person_roles/{coperson_role_id}.json')
 
 
 def coperson_roles_edit(self, coperson_role_id: int, coperson_id: int = None, cou_id: int = None, status: str = None,
@@ -209,53 +188,35 @@ def coperson_roles_edit(self, coperson_role_id: int, coperson_id: int = None, co
         404 CoPersonRole Unknown                                        id not found
         500 Other Error                                                 Unknown error
     """
-    coperson_role = coperson_roles_view_one(self, coperson_role_id)
-    post_body = {
-        'RequestType': 'CoPersonRoles',
+    existing = coperson_roles_view_one(self, coperson_role_id)
+    existing_role = existing.get('CoPersonRoles')[0]
+    role = {
         'Version': '1.0',
-        'CoPersonRoles': [
-            {
-                'Version': '1.0',
-                'Person':
-                    {
-                        'Type': 'CO'
-                    },
-                'O': str(self._CO_API_ORG_NAME)
-            }
-        ]
+        'Person': {
+            'Type': 'CO',
+            'Id': str(coperson_id) if coperson_id else str(existing_role.get('Person').get('Id'))
+        },
+        'CouId': str(cou_id) if cou_id else str(existing_role.get('CouId')),
+        'O': str(self._CO_API_ORG_NAME)
     }
-    if coperson_id:
-        post_body['CoPersonRoles'][0]['Person']['Id'] = str(coperson_id)
-    else:
-        post_body['CoPersonRoles'][0]['Person']['Id'] = str(
-            coperson_role.get('CoPersonRoles')[0].get('Person').get('Id'))
-    if cou_id:
-        post_body['CoPersonRoles'][0]['CouId'] = str(cou_id)
-    else:
-        post_body['CoPersonRoles'][0]['CouId'] = str(coperson_role.get('CoPersonRoles')[0].get('CouId'))
     if status:
         if status not in self.STATUS_OPTIONS:
-            raise TypeError("Invalid Fields 'status'")
-        post_body['CoPersonRoles'][0]['Status'] = str(status)
+            raise ValueError("Invalid Fields 'status'")
+        role['Status'] = str(status)
     else:
-        post_body['CoPersonRoles'][0]['Status'] = coperson_role.get('CoPersonRoles')[0].get('Status')
+        role['Status'] = existing_role.get('Status')
     if affiliation:
         affiliation = str(affiliation).lower()
         if affiliation not in self.AFFILIATION_OPTIONS:
-            raise TypeError("Invalid Fields 'affiliation'")
-        post_body['CoPersonRoles'][0]['Affiliation'] = str(affiliation)
+            raise ValueError("Invalid Fields 'affiliation'")
+        role['Affiliation'] = str(affiliation)
     else:
-        post_body['CoPersonRoles'][0]['Affiliation'] = coperson_role.get('CoPersonRoles')[0].get('Affiliation')
-    post_body = json.dumps(post_body)
-    url = self._CO_API_URL + '/co_person_roles/' + str(coperson_role_id) + '.json'
-    resp = self._s.put(
-        url=url,
-        data=post_body
-    )
-    if resp.status_code == 200:
-        return True
-    else:
-        resp.raise_for_status()
+        role['Affiliation'] = existing_role.get('Affiliation')
+    return self._put(f'co_person_roles/{coperson_role_id}.json', {
+        'RequestType': 'CoPersonRoles',
+        'Version': '1.0',
+        'CoPersonRoles': [role]
+    })
 
 
 def coperson_roles_view_all(self) -> dict:
@@ -304,14 +265,7 @@ def coperson_roles_view_all(self) -> dict:
         401 Unauthorized                                            Authentication required
         500 Other Error                                             Unknown error
     """
-    url = self._CO_API_URL + '/co_person_roles.json'
-    resp = self._s.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get('co_person_roles.json')
 
 
 def coperson_roles_view_per_coperson(self, coperson_id: int) -> dict:
@@ -362,16 +316,7 @@ def coperson_roles_view_per_coperson(self, coperson_id: int) -> dict:
         404 CO Person Unknown                                       id not found
         500 Other Error                                             Unknown error
     """
-    url = self._CO_API_URL + '/co_person_roles.json'
-    params = {'copersonid': int(coperson_id)}
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get('co_person_roles.json', params={'copersonid': int(coperson_id)})
 
 
 def coperson_roles_view_per_cou(self, cou_id: int) -> dict:
@@ -422,16 +367,7 @@ def coperson_roles_view_per_cou(self, cou_id: int) -> dict:
         404 COU Unknown                                             id not found
         500 Other Error                                             Unknown error
     """
-    url = self._CO_API_URL + '/co_person_roles.json'
-    params = {'couid': int(cou_id)}
-    resp = self._s.get(
-        url=url,
-        params=params
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get('co_person_roles.json', params={'couid': int(cou_id)})
 
 
 def coperson_roles_view_one(self, coperson_role_id: int) -> dict:
@@ -482,11 +418,4 @@ def coperson_roles_view_one(self, coperson_role_id: int) -> dict:
         404 CoPersonRole Unknown                                        id not found
         500 Other Error                                                 Unknown error
     """
-    url = self._CO_API_URL + '/co_person_roles/' + str(coperson_role_id) + '.json'
-    resp = self._s.get(
-        url=url
-    )
-    if resp.status_code == 200:
-        return json.loads(resp.text)
-    else:
-        resp.raise_for_status()
+    return self._get(f'co_person_roles/{coperson_role_id}.json')
