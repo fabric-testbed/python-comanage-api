@@ -4,7 +4,7 @@ Examples demonstrating basic usage for each wrapped endpoint. Examples dynamical
 
 - Example code tested against COmanage v4.0.0
 - Examples use the alpha tier configuration from `.env` (registry-test.cilogon.org)
-- Run examples as modules from the project root: `python -m examples.<name>`
+- Run examples from the project root: `uv run python examples/<name>.py`
 
 ## Table of Contents
 
@@ -68,7 +68,7 @@ api = ComanageApi(
 Example: `coorg_identity_links_example.py`
 
 ```console
-$ python -m examples.coorg_identity_links_example
+$ uv run python examples/coorg_identity_links_example.py
 ### coorg_identity_links_add
 [NOT IMPLEMENTED]  NotImplementedError - coorg_identity_links_add() is not implemented
 ### coorg_identity_links_delete
@@ -122,7 +122,7 @@ Example: `copeople_example.py`
 **NOTE**: This example exits early after `email_addresses_view_per_person`. The unimplemented methods (`copeople_add`, `copeople_delete`, `copeople_edit`, `copeople_find`) and remaining view methods are after `exit(0)` and only run if that line is removed.
 
 ```console
-$ python -m examples.copeople_example
+$ uv run python examples/copeople_example.py
 ### discover CO Person ID
 Using CO Person ID: <Id>
 ### discover identifier for CO Person
@@ -191,7 +191,7 @@ Example: `coperson_roles_example.py`
 This example dynamically discovers a valid CO Person ID and COU ID, then performs a full CRUD cycle: add a role, view it, edit it, list roles, and delete it.
 
 ```console
-$ python -m examples.coperson_roles_example
+$ uv run python examples/coperson_roles_example.py
 ### discover CO Person ID and COU ID
 Using CO Person ID: <Id>
 Using COU ID: <Id>
@@ -299,7 +299,7 @@ Example: `cous_example.py`
 This example performs a full CRUD cycle: add a COU, view all, edit it, view one, delete it, and attempt to view the deleted COU.
 
 ```console
-$ python -m examples.cous_example
+$ uv run python examples/cous_example.py
 ### cous_add
 {
     "ResponseType": "NewObject",
@@ -381,7 +381,7 @@ True
 Example: `email_addresses_example.py`
 
 ```console
-$ python -m examples.email_addresses_example
+$ uv run python examples/email_addresses_example.py
 ### discover CO Person ID
 Using CO Person ID: <Id>
 ### email_addresses_add
@@ -443,7 +443,7 @@ Using CO Person ID: <Id>
 Example: `identifiers_example.py`
 
 ```console
-$ python -m examples.identifiers_example
+$ uv run python examples/identifiers_example.py
 ### discover CO Person ID
 Using CO Person ID: <Id>
 ### identifiers_add
@@ -508,7 +508,7 @@ Using CO Person ID: <Id>
 Example: `names_example.py`
 
 ```console
-$ python -m examples.names_example
+$ uv run python examples/names_example.py
 ### discover CO Person ID
 Using CO Person ID: <Id>
 ### names_add
@@ -572,7 +572,7 @@ Using CO Person ID: <Id>
 Example: `org_identities_example.py`
 
 ```console
-$ python -m examples.org_identities_example
+$ uv run python examples/org_identities_example.py
 ### org_identities_add
 [NOT IMPLEMENTED]  NotImplementedError - org_identities_add() is not implemented
 ### org_identities_delete
@@ -637,7 +637,7 @@ Example: `ssh_keys_example.py`
 This example dynamically discovers a CO Person ID, then performs a full CRUD cycle: add an SSH key, view all, view per person, view one, edit it, and delete it.
 
 ```console
-$ python -m examples.ssh_keys_example
+$ uv run python examples/ssh_keys_example.py
 ### discover CO Person ID
 Using CO Person ID: <Id>
 ### ssh_keys_add

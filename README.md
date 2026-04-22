@@ -141,15 +141,15 @@ Return types based on implementation status of wrapped API endpoints
     - Edit an existing CO Identity Link.
 - `coorg_identity_links_view_all() -> dict`
     - Retrieve all existing CO Identity Links.
-- `coorg_identity_links_view_by_identity(identifier_id: int) -> dict`
+- `coorg_identity_links_view_by_identity(identity_type: str, identity_id: int) -> dict`
     - Retrieve all existing CO Identity Links for a CO Person or an Org Identity.
-- `coorg_identity_links_view_one(org_identity_id: int) -> dict`
+- `coorg_identity_links_view_one(coorg_identity_link_id: int) -> dict`
     - Retrieve an existing CO Identity Link.
 
 **NOTE**: when provided, valid values for `identity_type` as follows:
 
 ```python
-IDENTITY_OPTIONS = ['copersonid', 'orgidentityid']
+PERSON_OPTIONS = ['copersonid', 'orgidentityid']
 ```
 
 ### <a name="coperson"></a>[CoPerson API](https://spaces.at.internet2.edu/display/COmanage/CoPerson+API) (COmanage v3.3.0+)
@@ -317,7 +317,7 @@ PERSON_OPTIONS = ['copersonid', 'orgidentityid']
     - Edit an existing Organizational Identity.
 - `org_identities_view_all() -> dict`
     - Retrieve all existing Organizational Identities.
-- `org_identities_view_per_co(person_type: str, person_id: int) -> dict`
+- `org_identities_view_per_co() -> dict`
     - Retrieve all existing Organizational Identities for the specified CO.
 - `org_identities_view_per_identifier(identifier_id: int) -> dict`
     - Retrieve all existing Organizational Identities attached to the specified identifier.
@@ -335,7 +335,7 @@ PERSON_OPTIONS = ['copersonid', 'orgidentityid']
 - `ssh_keys_delete(ssh_key_id: int) -> bool`
     - Remove an SSH Key.
 - `ssh_keys_edit(ssh_key_id: int, coperson_id: int = None, ssh_key: str = None, key_type: str = None, comment: str = None, ssh_key_authenticator_id: int = None) -> bool`
-    - Edit an exiting SSH Key.
+    - Edit an existing SSH Key.
 - `ssh_keys_view_all() -> dict`
     - Retrieve all existing SSH Keys.
 - `ssh_keys_view_per_coperson(coperson_id: int) -> dict`
@@ -466,6 +466,6 @@ Pressing the "Edit" option will display the fields for the Authenticator along w
 - Identifier API: [https://spaces.at.internet2.edu/display/COmanage/Identifier+API](https://spaces.at.internet2.edu/display/COmanage/Identifier+API)
 - Name API: [https://spaces.at.internet2.edu/display/COmanage/Name+API](https://spaces.at.internet2.edu/display/COmanage/Name+API)
 - OrgIdentity API: [https://spaces.at.internet2.edu/display/COmanage/OrgIdentity+API](https://spaces.at.internet2.edu/display/COmanage/OrgIdentity+API)
-- SsHKey API: [https://spaces.at.internet2.edu/display/COmanage/SshKey+API](https://spaces.at.internet2.edu/display/COmanage/SshKey+API)
+- SshKey API: [https://spaces.at.internet2.edu/display/COmanage/SshKey+API](https://spaces.at.internet2.edu/display/COmanage/SshKey+API)
 - SSH Key Authenticator Plugin: [https://spaces.at.internet2.edu/display/COmanage/SSH+Key+Authenticator+Plugin](https://spaces.at.internet2.edu/display/COmanage/SSH+Key+Authenticator+Plugin)
 - PyPi: [https://pypi.org](https://pypi.org)
