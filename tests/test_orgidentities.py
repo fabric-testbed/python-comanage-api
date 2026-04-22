@@ -42,7 +42,7 @@ class TestOrgIdentitiesView:
 
     def test_view_per_co(self, api, mock_adapter):
         mock_adapter.get(f'{API_URL}/org_identities.json', json=SAMPLE_ORG_IDS)
-        result = api.org_identities_view_per_co()
+        api.org_identities_view_per_co()
         assert 'coid' in mock_adapter.last_request.qs
 
     def test_view_per_identifier(self, api, mock_adapter):

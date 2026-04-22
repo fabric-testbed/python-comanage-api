@@ -35,7 +35,6 @@ Implementation Notes
 - Authenticators that are locked cannot be managed by the API.
 """
 
-import json
 
 # SSH Key plugin base path
 _SSH_KEY_PATH = 'ssh_key_authenticator/ssh_keys'

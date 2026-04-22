@@ -83,14 +83,13 @@ class TestCopeopleView:
 
     def test_view_per_co(self, api, mock_adapter):
         mock_adapter.get(f'{API_URL}/co_people.json', json=SAMPLE_COPEOPLE)
-        result = api.copeople_view_per_co()
+        api.copeople_view_per_co()
         assert 'coid' in mock_adapter.last_request.qs
 
     def test_view_per_identifier(self, api, mock_adapter):
         mock_adapter.get(f'{API_URL}/co_people.json', json=SAMPLE_COPEOPLE)
-        result = api.copeople_view_per_identifier(identifier='user@example.com')
-        qs = mock_adapter.last_request.qs
-        assert 'search.identifier' in qs
+        api.copeople_view_per_identifier(identifier='user@example.com')
+        assert 'search.identifier' in mock_adapter.last_request.qs
 
     def test_view_per_identifier_distinct(self, api, mock_adapter):
         dupes = {

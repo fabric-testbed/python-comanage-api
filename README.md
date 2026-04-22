@@ -369,6 +369,15 @@ uv venv --python 3.12
 uv pip install -e ".[dev]"
 ```
 
+### Lint and test
+
+```console
+uv run ruff check .    # lint
+uv run pytest -v       # test
+```
+
+CI runs both on every push to `main`/`develop` and on PRs, across Python 3.9–3.12.
+
 ### Configure your environment
 
 Create a `.env` file from the included template if you don't want to put the API credentials in your code. Example code makes use of [python-dotenv](https://pypi.org/project/python-dotenv/)

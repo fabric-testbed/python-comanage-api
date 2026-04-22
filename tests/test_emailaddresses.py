@@ -54,7 +54,7 @@ class TestEmailAddressesView:
 class TestEmailAddressesViewPerPerson:
     def test_valid_copersonid(self, api, mock_adapter):
         mock_adapter.get(f'{API_URL}/email_addresses.json', json=SAMPLE_EMAILS)
-        result = api.email_addresses_view_per_person(person_type='copersonid', person_id=100)
+        api.email_addresses_view_per_person(person_type='copersonid', person_id=100)
         assert 'copersonid' in mock_adapter.last_request.qs
 
     def test_valid_orgidentityid(self, api, mock_adapter):

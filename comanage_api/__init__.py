@@ -5,22 +5,70 @@ from requests import Session
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from ._coorgidentitylinks import coorg_identity_links_add, coorg_identity_links_delete, coorg_identity_links_edit, \
-    coorg_identity_links_view_all, coorg_identity_links_view_by_identity, coorg_identity_links_view_one
-from ._copeople import copeople_add, copeople_delete, copeople_edit, copeople_find, copeople_match, \
-    copeople_view_all, copeople_view_per_co, copeople_view_per_identifier, copeople_view_one
-from ._copersonroles import coperson_roles_add, coperson_roles_delete, coperson_roles_edit, coperson_roles_view_all, \
-    coperson_roles_view_per_coperson, coperson_roles_view_per_cou, coperson_roles_view_one
-from ._cous import cous_add, cous_delete, cous_edit, cous_view_all, cous_view_per_co, cous_view_one
-from ._emailaddresses import email_addresses_add, email_addresses_delete, email_addresses_edit, \
-    email_addresses_view_all, email_addresses_view_per_person, email_addresses_view_one
-from ._identifiers import identifiers_add, identifiers_assign, identifiers_delete, identifiers_edit, \
-    identifiers_view_all, identifiers_view_per_entity, identifiers_view_one
-from ._names import names_add, names_delete, names_edit, names_view_all, names_view_per_person, names_view_one
-from ._orgidentities import org_identities_add, org_identities_delete, org_identities_edit, org_identities_view_all, \
-    org_identities_view_per_co, org_identities_view_per_identifier, org_identities_view_one
-from ._sshkeys import ssh_keys_add, ssh_keys_delete, ssh_keys_edit, ssh_keys_view_all, ssh_keys_view_per_coperson, \
-    ssh_keys_view_one
+from ._coorgidentitylinks import (
+    coorg_identity_links_add,
+    coorg_identity_links_delete,
+    coorg_identity_links_edit,
+    coorg_identity_links_view_all,
+    coorg_identity_links_view_by_identity,
+    coorg_identity_links_view_one,
+)
+from ._copeople import (
+    copeople_add,
+    copeople_delete,
+    copeople_edit,
+    copeople_find,
+    copeople_match,
+    copeople_view_all,
+    copeople_view_one,
+    copeople_view_per_co,
+    copeople_view_per_identifier,
+)
+from ._copersonroles import (
+    coperson_roles_add,
+    coperson_roles_delete,
+    coperson_roles_edit,
+    coperson_roles_view_all,
+    coperson_roles_view_one,
+    coperson_roles_view_per_coperson,
+    coperson_roles_view_per_cou,
+)
+from ._cous import cous_add, cous_delete, cous_edit, cous_view_all, cous_view_one, cous_view_per_co
+from ._emailaddresses import (
+    email_addresses_add,
+    email_addresses_delete,
+    email_addresses_edit,
+    email_addresses_view_all,
+    email_addresses_view_one,
+    email_addresses_view_per_person,
+)
+from ._identifiers import (
+    identifiers_add,
+    identifiers_assign,
+    identifiers_delete,
+    identifiers_edit,
+    identifiers_view_all,
+    identifiers_view_one,
+    identifiers_view_per_entity,
+)
+from ._names import names_add, names_delete, names_edit, names_view_all, names_view_one, names_view_per_person
+from ._orgidentities import (
+    org_identities_add,
+    org_identities_delete,
+    org_identities_edit,
+    org_identities_view_all,
+    org_identities_view_one,
+    org_identities_view_per_co,
+    org_identities_view_per_identifier,
+)
+from ._sshkeys import (
+    ssh_keys_add,
+    ssh_keys_delete,
+    ssh_keys_edit,
+    ssh_keys_view_all,
+    ssh_keys_view_one,
+    ssh_keys_view_per_coperson,
+)
 
 # fabric-comanage-api version
 __VERSION__ = "0.1.5"

@@ -2,7 +2,7 @@ import pytest
 from requests.adapters import HTTPAdapter
 from requests.exceptions import HTTPError
 
-from comanage_api import ComanageApi, __VERSION__
+from comanage_api import __VERSION__, ComanageApi
 
 API_URL = 'https://registry.example.org/registry'
 
