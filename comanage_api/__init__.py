@@ -93,8 +93,8 @@ class ComanageApi(object):
         self._s.auth = (self._CO_API_USER, self._CO_API_PASS)
 
     # CoOrgIdentityLink API
-    def coorg_identity_links_add(self):
-        return coorg_identity_links_add(self)
+    def coorg_identity_links_add(self, coperson_id: int, org_identity_id: int):
+        return coorg_identity_links_add(self, coperson_id=coperson_id, org_identity_id=org_identity_id)
 
     def coorg_identity_links_delete(self):
         return coorg_identity_links_delete(self)

@@ -122,8 +122,7 @@ Return types based on implementation status of wrapped API endpoints
 
 ### <a name="coorgidentitylink"></a>[CoOrgIdentityLink API](https://spaces.at.internet2.edu/display/COmanage/CoOrgIdentityLink+API) (COmanage v4.0.0+)
 
-- `coorg_identity_links_add() -> dict`
-    - `### NOT IMPLEMENTED ###`
+- `coorg_identity_links_add(coperson_id: int, org_identity_id: int) -> dict`
     - Add a new CO Org Identity Link.
     - A person must have an Org Identity and a CO Person record before they can be linked.
     - Note that invitations are a separate operation.
