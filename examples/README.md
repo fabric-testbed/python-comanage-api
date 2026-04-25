@@ -1,8 +1,10 @@
 # Examples
 
-Examples demonstrating basic usage for each wrapped endpoint. Some of the values used herein are specific to the ImPACT project registry and thus would not work for other registries, but the concept would be the same for any registry.
+Examples demonstrating basic usage for each wrapped endpoint. Examples dynamically discover valid IDs from the configured CO at runtime, so they work across different registries without modification.
 
 - Example code tested against COmanage v4.0.0
+- Examples use the alpha tier configuration from `.env` (registry-test.cilogon.org)
+- Run examples from the project root: `uv run python examples/<name>.py`
 
 ## Table of Contents
 
@@ -19,7 +21,7 @@ Examples demonstrating basic usage for each wrapped endpoint. Some of the values
 
 ## <a name="config"></a>Configuration
 
-All example presented herein use the same base configuration as defined by the `examples/__init__.py` file
+All examples presented herein use the same base configuration as defined by the `examples/__init__.py` file
 
 ```python
 # examples/__init__.py
@@ -63,22 +65,18 @@ api = ComanageApi(
 
 ## <a name="coorgidentitylink"></a>CoOrgIdentityLink API
 
-Example: `co_org_identity_links_example.py`
+Example: `coorg_identity_links_example.py`
 
 ```console
-$ python examples/coorg_identity_links_example.py
+$ uv run python examples/coorg_identity_links_example.py
 ### coorg_identity_links_add
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+[NOT IMPLEMENTED]  NotImplementedError - coorg_identity_links_add() is not implemented
 ### coorg_identity_links_delete
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+[NOT IMPLEMENTED]  NotImplementedError - coorg_identity_links_delete() is not implemented
 ### coorg_identity_links_edit
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
-### coorg_identity_links_view_all
-[ERROR] Exception caught
--->  HTTPError - 401 Client Error: Unauthorized for url: https://registry-test.cilogon.org/registry/co_org_identity_links.json
+[NOT IMPLEMENTED]  NotImplementedError - coorg_identity_links_edit() is not implemented
+### discover CO Person ID
+Using CO Person ID: <Id>
 ### coorg_identity_links_view_by_identity
 {
     "ResponseType": "CoOrgIdentityLinks",
@@ -86,14 +84,14 @@ $ python examples/coorg_identity_links_example.py
     "CoOrgIdentityLinks": [
         {
             "Version": "1.0",
-            "Id": "44",
-            "CoPersonId": "163",
-            "OrgIdentityId": "190",
-            "Created": "2018-01-24 19:08:47",
-            "Modified": "2018-01-24 19:08:47",
+            "Id": "<Id>",
+            "CoPersonId": "<CoPersonId>",
+            "OrgIdentityId": "<OrgIdentityId>",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "0",
             "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/242181"
+            "ActorIdentifier": "<ActorIdentifier>"
         }
     ]
 }
@@ -104,14 +102,14 @@ $ python examples/coorg_identity_links_example.py
     "CoOrgIdentityLinks": [
         {
             "Version": "1.0",
-            "Id": "44",
-            "CoPersonId": "163",
-            "OrgIdentityId": "190",
-            "Created": "2018-01-24 19:08:47",
-            "Modified": "2018-01-24 19:08:47",
+            "Id": "<Id>",
+            "CoPersonId": "<CoPersonId>",
+            "OrgIdentityId": "<OrgIdentityId>",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "0",
             "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/242181"
+            "ActorIdentifier": "<ActorIdentifier>"
         }
     ]
 }
@@ -121,103 +119,14 @@ $ python examples/coorg_identity_links_example.py
 
 Example: `copeople_example.py`
 
+**NOTE**: This example exits early after `email_addresses_view_per_person`. The unimplemented methods (`copeople_add`, `copeople_delete`, `copeople_edit`, `copeople_find`) and remaining view methods are after `exit(0)` and only run if that line is removed.
+
 ```console
-$ python examples/copeople_example.py
-### copeople_add
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
-### copeople_delete
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
-### copeople_edit
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
-### copeople_find
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
-### copeople_match
-{
-    "ResponseType": "CoPeople",
-    "Version": "1.0",
-    "CoPeople": [
-        {
-            "Version": "1.0",
-            "Id": "1135",
-            "CoId": "3",
-            "Status": "Active",
-            "Created": "2021-03-17 16:03:02",
-            "Modified": "2021-03-17 16:04:23",
-            "Revision": "5",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/242181"
-        }
-    ]
-}
-### copeople_view_all
-[ERROR] Exception caught
--->  HTTPError - 401 Client Error: Unauthorized for url: https://registry.cilogon.org/registry/co_people.json
-### copeople_view_per_co
-{
-    "ResponseType": "CoPeople",
-    "Version": "1.0",
-    "CoPeople": [
-        {
-            "Version": "1.0",
-            "Id": "29",
-            "CoId": "3",
-            "Status": "Active",
-            "Created": "2018-11-05 20:48:55",
-            "Modified": "2018-11-06 03:23:00",
-            "Revision": "5",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverT/users/241998"
-        },
-        {
-            "Version": "1.0",
-            "Id": "1135",
-            "CoId": "3",
-            "Status": "Active",
-            "Created": "2021-03-17 16:03:02",
-            "Modified": "2021-03-17 16:04:23",
-            "Revision": "5",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/242181"
-        },
-        {
-            "Version": "1.0",
-            "Id": "1558",
-            "CoId": "3",
-            "Status": "Active",
-            "Created": "2021-09-10 18:32:32",
-            "Modified": "2021-09-10 18:33:46",
-            "Revision": "5",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/227641"
-        },
-        {
-            "Version": "1.0",
-            "Id": "1573",
-            "CoId": "3",
-            "Status": "Active",
-            "Created": "2021-09-14 11:06:03",
-            "Modified": "2021-09-14 11:06:57",
-            "Revision": "7",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverT/users/2604273"
-        },
-        {
-            "Version": "1.0",
-            "Id": "1603",
-            "CoId": "3",
-            "Status": "Active",
-            "Created": "2021-09-15 12:34:37",
-            "Modified": "2021-09-15 12:36:02",
-            "Revision": "7",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/226066"
-        }
-    ]
-}
+$ uv run python examples/copeople_example.py
+### discover CO Person ID
+Using CO Person ID: <Id>
+### discover identifier for CO Person
+Using identifier: <Identifier>
 ### copeople_view_per_identifier
 {
     "ResponseType": "CoPeople",
@@ -225,49 +134,73 @@ $ python examples/copeople_example.py
     "CoPeople": [
         {
             "Version": "1.0",
-            "Id": "1135",
-            "CoId": "3",
+            "Id": "<Id>",
+            "CoId": "<CoId>",
             "Status": "Active",
-            "Created": "2021-03-17 16:03:02",
-            "Modified": "2021-03-17 16:04:23",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "5",
             "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/242181"
+            "ActorIdentifier": "<ActorIdentifier>"
         }
     ]
 }
-### copeople_view_one
+### email_addresses_view_per_person
 {
-    "ResponseType": "CoPeople",
+    "ResponseType": "EmailAddresses",
     "Version": "1.0",
-    "CoPeople": [
+    "EmailAddresses": [
         {
             "Version": "1.0",
-            "Id": "29",
-            "CoId": "3",
-            "Status": "Active",
-            "Created": "2018-11-05 20:48:55",
-            "Modified": "2018-11-06 03:23:00",
-            "Revision": "5",
+            "Id": "<Id>",
+            "Mail": "<email@example.com>",
+            "Type": "official",
+            "Verified": true,
+            "Person": {
+                "Type": "CO",
+                "Id": "<Id>"
+            },
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
+            "Revision": "0",
             "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverT/users/241998"
+            "ActorIdentifier": "<ActorIdentifier>"
         }
     ]
 }
+<email@example.com>
+```
+
+When run with `exit(0)` removed, the unimplemented methods produce:
+
+```console
+### copeople_add
+[NOT IMPLEMENTED]  NotImplementedError - copeople_add() is not implemented
+### copeople_delete
+[NOT IMPLEMENTED]  NotImplementedError - copeople_delete() is not implemented
+### copeople_edit
+[NOT IMPLEMENTED]  NotImplementedError - copeople_edit() is not implemented
+### copeople_find
+[NOT IMPLEMENTED]  NotImplementedError - copeople_find() is not implemented
 ```
 
 ## <a name="copersonrole"></a>CoPersonRole API
 
 Example: `coperson_roles_example.py`
 
+This example dynamically discovers a valid CO Person ID and COU ID, then performs a full CRUD cycle: add a role, view it, edit it, list roles, and delete it.
+
 ```console
-$ python examples/coperson_roles_example.py
+$ uv run python examples/coperson_roles_example.py
+### discover CO Person ID and COU ID
+Using CO Person ID: <Id>
+Using COU ID: <Id>
 ### coperson_roles_add
 {
     "ResponseType": "NewObject",
     "Version": "1.0",
     "ObjectType": "CoPersonRole",
-    "Id": "1727"
+    "Id": "<Id>"
 }
 ### coperson_roles_view_one
 {
@@ -276,20 +209,20 @@ $ python examples/coperson_roles_example.py
     "CoPersonRoles": [
         {
             "Version": "1.0",
-            "Id": "1727",
+            "Id": "<Id>",
             "Person": {
                 "Type": "CO",
-                "Id": "1603"
+                "Id": "<Id>"
             },
-            "CouId": "39",
+            "CouId": "<CouId>",
             "Affiliation": "student",
-            "O": "Impact",
+            "O": "<CO_API_ORG_NAME>",
             "Status": "PendingApproval",
-            "Created": "2021-09-30 01:22:44",
-            "Modified": "2021-09-30 01:22:44",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "0",
             "Deleted": false,
-            "ActorIdentifier": "co_3.development"
+            "ActorIdentifier": "<ActorIdentifier>"
         }
     ]
 }
@@ -302,64 +235,37 @@ True
     "CoPersonRoles": [
         {
             "Version": "1.0",
-            "Id": "1727",
+            "Id": "<Id>",
             "Person": {
                 "Type": "CO",
-                "Id": "1603"
+                "Id": "<Id>"
             },
-            "CouId": "39",
+            "CouId": "<CouId>",
             "Affiliation": "member",
-            "O": "Impact",
+            "O": "<CO_API_ORG_NAME>",
             "Status": "Active",
-            "Created": "2021-09-30 01:22:44",
-            "Modified": "2021-09-30 01:22:45",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "1",
             "Deleted": false,
-            "ActorIdentifier": "co_3.development"
+            "ActorIdentifier": "<ActorIdentifier>"
         }
     ]
 }
 ### coperson_roles_view_all
-[ERROR] Exception caught
--->  HTTPError - 401 Client Error: Unauthorized for url: https://registry.cilogon.org/registry/co_person_roles.json
+{
+    "ResponseType": "CoPersonRoles",
+    "Version": "1.0",
+    "CoPersonRoles": [
+        ...
+    ]
+}
 ### coperson_roles_view_per_coperson
 {
     "ResponseType": "CoPersonRoles",
     "Version": "1.0",
     "CoPersonRoles": [
-        {
-            "Version": "1.0",
-            "Id": "1648",
-            "Person": {
-                "Type": "CO",
-                "Id": "1603"
-            },
-            "CouId": "39",
-            "Affiliation": "member",
-            "Status": "Active",
-            "Created": "2021-09-15 12:34:47",
-            "Modified": "2021-09-15 12:36:02",
-            "Revision": "5",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/226066"
-        },
-        {
-            "Version": "1.0",
-            "Id": "1727",
-            "Person": {
-                "Type": "CO",
-                "Id": "1603"
-            },
-            "CouId": "39",
-            "Affiliation": "member",
-            "O": "Impact",
-            "Status": "Active",
-            "Created": "2021-09-30 01:22:44",
-            "Modified": "2021-09-30 01:22:45",
-            "Revision": "1",
-            "Deleted": false,
-            "ActorIdentifier": "co_3.development"
-        }
+        ...
     ]
 }
 ### coperson_roles_view_per_cou
@@ -367,71 +273,7 @@ True
     "ResponseType": "CoPersonRoles",
     "Version": "1.0",
     "CoPersonRoles": [
-        {
-            "Version": "1.0",
-            "Id": "1622",
-            "Person": {
-                "Type": "CO",
-                "Id": "1558"
-            },
-            "CouId": "39",
-            "Affiliation": "member",
-            "Status": "Active",
-            "Created": "2021-09-10 18:32:32",
-            "Modified": "2021-09-10 18:33:46",
-            "Revision": "5",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/227641"
-        },
-        {
-            "Version": "1.0",
-            "Id": "1628",
-            "Person": {
-                "Type": "CO",
-                "Id": "1573"
-            },
-            "CouId": "39",
-            "Affiliation": "member",
-            "Status": "Active",
-            "Created": "2021-09-14 11:06:09",
-            "Modified": "2021-09-14 11:06:57",
-            "Revision": "5",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverT/users/2604273"
-        },
-        {
-            "Version": "1.0",
-            "Id": "1648",
-            "Person": {
-                "Type": "CO",
-                "Id": "1603"
-            },
-            "CouId": "39",
-            "Affiliation": "member",
-            "Status": "Active",
-            "Created": "2021-09-15 12:34:47",
-            "Modified": "2021-09-15 12:36:02",
-            "Revision": "5",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/226066"
-        },
-        {
-            "Version": "1.0",
-            "Id": "1727",
-            "Person": {
-                "Type": "CO",
-                "Id": "1603"
-            },
-            "CouId": "39",
-            "Affiliation": "member",
-            "O": "Impact",
-            "Status": "Active",
-            "Created": "2021-09-30 01:22:44",
-            "Modified": "2021-09-30 01:22:45",
-            "Revision": "1",
-            "Deleted": false,
-            "ActorIdentifier": "co_3.development"
-        }
+        ...
     ]
 }
 ### coperson_roles_delete
@@ -442,21 +284,9 @@ True
     "Version": "1.0",
     "CoPersonRoles": [
         {
-            "Version": "1.0",
-            "Id": "1727",
-            "Person": {
-                "Type": "CO",
-                "Id": "1603"
-            },
-            "CouId": "39",
-            "Affiliation": "member",
-            "O": "Impact",
-            "Status": "Active",
-            "Created": "2021-09-30 01:22:44",
-            "Modified": "2021-09-30 01:22:46",
-            "Revision": "1",
+            ...
             "Deleted": true,
-            "ActorIdentifier": "co_3.development"
+            ...
         }
     ]
 }
@@ -466,14 +296,16 @@ True
 
 Example: `cous_example.py` 
 
+This example performs a full CRUD cycle: add a COU, view all, edit it, view one, delete it, and attempt to view the deleted COU.
+
 ```console
-$ python examples/cous_example.py
+$ uv run python examples/cous_example.py
 ### cous_add
 {
     "ResponseType": "NewObject",
     "Version": "1.0",
     "ObjectType": "Cou",
-    "Id": "105"
+    "Id": "<Id>"
 }
 ### cous_view_all
 {
@@ -482,46 +314,27 @@ $ python examples/cous_example.py
     "Cous": [
         {
             "Version": "1.0",
-            "Id": "38",
-            "CoId": "3",
-            "Name": "enrollment-approval",
-            "Description": "Enrollment Approval Personnel - can approve or deny new registry members",
-            "Lft": "66",
-            "Rght": "67",
-            "Created": "2021-09-10 14:33:11",
-            "Modified": "2021-09-10 14:33:11",
+            "Id": "<Id>",
+            "CoId": "<CoId>",
+            "Name": "<name>",
+            "Description": "<description>",
+            "Lft": "<Lft>",
+            "Rght": "<Rght>",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "0",
             "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/242181"
+            "ActorIdentifier": "<ActorIdentifier>"
         },
-        {
-            "Version": "1.0",
-            "Id": "39",
-            "CoId": "3",
-            "Name": "impact-users",
-            "Description": "ImPACT Users - Registering with the ImPACT site will add new user's to this group",
-            "Lft": "68",
-            "Rght": "69",
-            "Created": "2021-09-10 14:44:09",
-            "Modified": "2021-09-10 14:44:09",
-            "Revision": "0",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/242181"
-        },
-        {
-            "Version": "1.0",
-            "Id": "105",
-            "CoId": "3",
-            "Name": "cou test",
-            "Description": "cou test description",
-            "Lft": "96",
-            "Rght": "97",
-            "Created": "2021-10-01 20:45:33",
-            "Modified": "2021-10-01 20:45:33",
-            "Revision": "0",
-            "Deleted": false,
-            "ActorIdentifier": "co_3.development"
-        }
+        ...
+    ]
+}
+### cous_view_per_co
+{
+    "ResponseType": "Cous",
+    "Version": "1.0",
+    "Cous": [
+        ...
     ]
 }
 ### cous_edit
@@ -533,17 +346,17 @@ True
     "Cous": [
         {
             "Version": "1.0",
-            "Id": "105",
-            "CoId": "3",
+            "Id": "<Id>",
+            "CoId": "<CoId>",
             "Name": "cou test - edited",
             "Description": "cou test description - edited",
-            "Lft": "96",
-            "Rght": "97",
-            "Created": "2021-10-01 20:45:33",
-            "Modified": "2021-10-01 20:45:34",
+            "Lft": "<Lft>",
+            "Rght": "<Rght>",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "1",
             "Deleted": false,
-            "ActorIdentifier": "co_3.development"
+            "ActorIdentifier": "<ActorIdentifier>"
         }
     ]
 }
@@ -555,18 +368,9 @@ True
     "Version": "1.0",
     "Cous": [
         {
-            "Version": "1.0",
-            "Id": "105",
-            "CoId": "3",
-            "Name": "cou test - edited",
-            "Description": "cou test description - edited",
-            "Lft": "96",
-            "Rght": "97",
-            "Created": "2021-10-01 20:45:33",
-            "Modified": "2021-10-01 20:45:34",
-            "Revision": "1",
+            ...
             "Deleted": true,
-            "ActorIdentifier": "co_3.development"
+            ...
         }
     ]
 }
@@ -577,19 +381,15 @@ True
 Example: `email_addresses_example.py`
 
 ```console
-$ python examples/email_addresses_example.py
+$ uv run python examples/email_addresses_example.py
+### discover CO Person ID
+Using CO Person ID: <Id>
 ### email_addresses_add
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+[NOT IMPLEMENTED]  NotImplementedError - email_addresses_add() is not implemented
 ### email_addresses_delete
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+[NOT IMPLEMENTED]  NotImplementedError - email_addresses_delete() is not implemented
 ### email_addresses_edit
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
-### email_addresses_view_all
-[ERROR] Exception caught
--->  HTTPError - 401 Client Error: Unauthorized for url: https://registry.cilogon.org/registry/email_addresses.json
+[NOT IMPLEMENTED]  NotImplementedError - email_addresses_edit() is not implemented
 ### email_addresses_view_per_person
 {
     "ResponseType": "EmailAddresses",
@@ -597,36 +397,19 @@ $ python examples/email_addresses_example.py
     "EmailAddresses": [
         {
             "Version": "1.0",
-            "Id": "810",
-            "Mail": "mjstealey@gmail.com",
+            "Id": "<Id>",
+            "Mail": "<email@example.com>",
             "Type": "official",
             "Verified": true,
             "Person": {
                 "Type": "CO",
-                "Id": "1603"
+                "Id": "<Id>"
             },
-            "SourceEmailAddressId": "809",
-            "Created": "2021-09-15 12:34:37",
-            "Modified": "2021-09-15 12:34:37",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "0",
             "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/226066"
-        },
-        {
-            "Version": "1.0",
-            "Id": "811",
-            "Mail": "mjstealey@gmail.com",
-            "Type": "official",
-            "Verified": true,
-            "Person": {
-                "Type": "CO",
-                "Id": "1603"
-            },
-            "Created": "2021-09-15 12:34:47",
-            "Modified": "2021-09-15 12:35:22",
-            "Revision": "0",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/226066"
+            "ActorIdentifier": "<ActorIdentifier>"
         }
     ]
 }
@@ -637,20 +420,19 @@ $ python examples/email_addresses_example.py
     "EmailAddresses": [
         {
             "Version": "1.0",
-            "Id": "810",
-            "Mail": "mjstealey@gmail.com",
+            "Id": "<Id>",
+            "Mail": "<email@example.com>",
             "Type": "official",
             "Verified": true,
             "Person": {
                 "Type": "CO",
-                "Id": "1603"
+                "Id": "<Id>"
             },
-            "SourceEmailAddressId": "809",
-            "Created": "2021-09-15 12:34:37",
-            "Modified": "2021-09-15 12:34:37",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "0",
             "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/226066"
+            "ActorIdentifier": "<ActorIdentifier>"
         }
     ]
 }
@@ -661,22 +443,17 @@ $ python examples/email_addresses_example.py
 Example: `identifiers_example.py`
 
 ```console
-$ python examples/identifiers_example.py
+$ uv run python examples/identifiers_example.py
+### discover CO Person ID
+Using CO Person ID: <Id>
 ### identifiers_add
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+[NOT IMPLEMENTED]  NotImplementedError - identifiers_add() is not implemented
 ### identifiers_assign
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+[NOT IMPLEMENTED]  NotImplementedError - identifiers_assign() is not implemented
 ### identifiers_delete
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+[NOT IMPLEMENTED]  NotImplementedError - identifiers_delete() is not implemented
 ### identifiers_edit
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
-### identifiers_view_all
-[ERROR] Exception caught
--->  HTTPError - 401 Client Error: Unauthorized for url: https://registry.cilogon.org/registry/identifiers.json
+[NOT IMPLEMENTED]  NotImplementedError - identifiers_edit() is not implemented
 ### identifiers_view_per_entity
 {
     "ResponseType": "Identifiers",
@@ -684,55 +461,21 @@ $ python examples/identifiers_example.py
     "Identifiers": [
         {
             "Version": "1.0",
-            "Id": "1552",
-            "Identifier": "http://cilogon.org/serverA/users/226066",
+            "Id": "<Id>",
+            "Identifier": "<Identifier>",
             "Type": "oidcsub",
             "Status": "Active",
             "Person": {
                 "Type": "CO",
-                "Id": "1603"
+                "Id": "<Id>"
             },
-            "SourceIdentifierId": "1550",
-            "Created": "2021-09-15 12:34:37",
-            "Modified": "2021-09-15 12:34:37",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "0",
             "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/226066"
+            "ActorIdentifier": "<ActorIdentifier>"
         },
-        {
-            "Version": "1.0",
-            "Id": "1553",
-            "Identifier": "http://cilogon.org/serverA/users/226066",
-            "Type": "sorid",
-            "Status": "Active",
-            "Person": {
-                "Type": "CO",
-                "Id": "1603"
-            },
-            "SourceIdentifierId": "1551",
-            "Created": "2021-09-15 12:34:37",
-            "Modified": "2021-09-15 12:34:37",
-            "Revision": "0",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/226066"
-        },
-        {
-            "Version": "1.0",
-            "Id": "1554",
-            "Identifier": "ImPACT1000006",
-            "Type": "impactid",
-            "Login": false,
-            "Status": "Active",
-            "Person": {
-                "Type": "CO",
-                "Id": "1603"
-            },
-            "Created": "2021-09-15 12:36:01",
-            "Modified": "2021-09-15 12:36:01",
-            "Revision": "0",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/242181"
-        }
+        ...
     ]
 }
 ### identifiers_view_one
@@ -742,20 +485,19 @@ $ python examples/identifiers_example.py
     "Identifiers": [
         {
             "Version": "1.0",
-            "Id": "1552",
-            "Identifier": "http://cilogon.org/serverA/users/226066",
+            "Id": "<Id>",
+            "Identifier": "<Identifier>",
             "Type": "oidcsub",
             "Status": "Active",
             "Person": {
                 "Type": "CO",
-                "Id": "1603"
+                "Id": "<Id>"
             },
-            "SourceIdentifierId": "1550",
-            "Created": "2021-09-15 12:34:37",
-            "Modified": "2021-09-15 12:34:37",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "0",
             "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/226066"
+            "ActorIdentifier": "<ActorIdentifier>"
         }
     ]
 }
@@ -766,19 +508,15 @@ $ python examples/identifiers_example.py
 Example: `names_example.py`
 
 ```console
-$ python examples/names_example.py
+$ uv run python examples/names_example.py
+### discover CO Person ID
+Using CO Person ID: <Id>
 ### names_add
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+[NOT IMPLEMENTED]  NotImplementedError - names_add() is not implemented
 ### names_delete
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+[NOT IMPLEMENTED]  NotImplementedError - names_delete() is not implemented
 ### names_edit
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
-### names_view_all
-[ERROR] Exception caught
--->  HTTPError - 401 Client Error: Unauthorized for url: https://registry.cilogon.org/registry/names.json
+[NOT IMPLEMENTED]  NotImplementedError - names_edit() is not implemented
 ### names_view_per_person
 {
     "ResponseType": "Names",
@@ -786,58 +524,20 @@ $ python examples/names_example.py
     "Names": [
         {
             "Version": "1.0",
-            "Id": "923",
-            "Given": "mj",
-            "Family": "stealey",
+            "Id": "<Id>",
+            "Given": "<Given>",
+            "Family": "<Family>",
             "Type": "official",
             "Person": {
                 "Type": "CO",
-                "Id": "1603"
-            },
-            "PrimaryName": false,
-            "Created": "2021-09-15 12:34:37",
-            "Modified": "2021-09-15 12:34:47",
-            "Revision": "1",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/226066"
-        },
-        {
-            "Version": "1.0",
-            "Id": "924",
-            "Given": "mj",
-            "Family": "stealey",
-            "Type": "official",
-            "Person": {
-                "Type": "CO",
-                "Id": "1603"
-            },
-            "SourceNameId": "922",
-            "Created": "2021-09-15 12:34:37",
-            "Modified": "2021-09-15 12:34:37",
-            "Revision": "0",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/226066"
-        },
-        {
-            "Version": "1.0",
-            "Id": "926",
-            "Honorific": "",
-            "Given": "mj",
-            "Middle": "",
-            "Family": "stealey",
-            "Suffix": "",
-            "Type": "official",
-            "Language": "",
-            "Person": {
-                "Type": "CO",
-                "Id": "1603"
+                "Id": "<Id>"
             },
             "PrimaryName": true,
-            "Created": "2021-09-15 12:34:47",
-            "Modified": "2021-09-15 12:34:47",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "0",
             "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/226066"
+            "ActorIdentifier": "<ActorIdentifier>"
         }
     ]
 }
@@ -848,20 +548,20 @@ $ python examples/names_example.py
     "Names": [
         {
             "Version": "1.0",
-            "Id": "923",
-            "Given": "mj",
-            "Family": "stealey",
+            "Id": "<Id>",
+            "Given": "<Given>",
+            "Family": "<Family>",
             "Type": "official",
             "Person": {
                 "Type": "CO",
-                "Id": "1603"
+                "Id": "<Id>"
             },
-            "PrimaryName": false,
-            "Created": "2021-09-15 12:34:37",
-            "Modified": "2021-09-15 12:34:47",
-            "Revision": "1",
+            "PrimaryName": true,
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
+            "Revision": "0",
             "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/226066"
+            "ActorIdentifier": "<ActorIdentifier>"
         }
     ]
 }
@@ -872,19 +572,13 @@ $ python examples/names_example.py
 Example: `org_identities_example.py`
 
 ```console
-$ python examples/org_identities_example.py
+$ uv run python examples/org_identities_example.py
 ### org_identities_add
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+[NOT IMPLEMENTED]  NotImplementedError - org_identities_add() is not implemented
 ### org_identities_delete
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
+[NOT IMPLEMENTED]  NotImplementedError - org_identities_delete() is not implemented
 ### org_identities_edit
-[ERROR] Exception caught
--->  HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local
-### org_identities_view_all
-[ERROR] Exception caught
--->  HTTPError - 401 Client Error: Unauthorized for url: https://registry.cilogon.org/registry/org_identities.json
+[NOT IMPLEMENTED]  NotImplementedError - org_identities_edit() is not implemented
 ### org_identities_view_per_co
 {
     "ResponseType": "OrgIdentities",
@@ -892,89 +586,27 @@ $ python examples/org_identities_example.py
     "OrgIdentities": [
         {
             "Version": "1.0",
-            "Id": "12",
+            "Id": "<Id>",
             "Status": "SY",
             "Affiliation": "member",
-            "O": "National Center for Supercomputing Applications",
-            "CoId": "3",
-            "Created": "2018-11-05 20:40:19",
-            "Modified": "2018-11-05 20:40:19",
+            "O": "<Organization>",
+            "CoId": "<CoId>",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "0",
             "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverT/users/37233"
+            "ActorIdentifier": "<ActorIdentifier>"
         },
-        {
-            "Version": "1.0",
-            "Id": "13",
-            "Status": "SY",
-            "Affiliation": "member",
-            "O": "University of North Carolina at Chapel Hill",
-            "CoId": "3",
-            "Created": "2018-11-05 20:48:47",
-            "Modified": "2018-11-05 20:48:47",
-            "Revision": "0",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverT/users/241998"
-        },
-        {
-            "Version": "1.0",
-            "Id": "321",
-            "Status": "SY",
-            "Affiliation": "member",
-            "O": "University of North Carolina at Chapel Hill",
-            "CoId": "3",
-            "Created": "2021-03-17 16:02:48",
-            "Modified": "2021-03-17 16:02:48",
-            "Revision": "0",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/242181"
-        },
-        {
-            "Version": "1.0",
-            "Id": "418",
-            "Status": "SY",
-            "Affiliation": "member",
-            "O": "University of North Carolina at Chapel Hill",
-            "CoId": "3",
-            "Created": "2021-09-10 18:32:22",
-            "Modified": "2021-09-10 18:32:22",
-            "Revision": "0",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/227641"
-        },
-        {
-            "Version": "1.0",
-            "Id": "430",
-            "Status": "SY",
-            "Affiliation": "member",
-            "O": "University of Wisconsin-Madison",
-            "CoId": "3",
-            "Created": "2021-09-14 11:06:03",
-            "Modified": "2021-09-14 11:06:03",
-            "Revision": "0",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverT/users/2604273"
-        },
-        {
-            "Version": "1.0",
-            "Id": "435",
-            "Status": "SY",
-            "Affiliation": "member",
-            "O": "Google",
-            "CoId": "3",
-            "Created": "2021-09-15 12:34:37",
-            "Modified": "2021-09-15 12:34:37",
-            "Revision": "0",
-            "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverA/users/226066"
-        }
+        ...
     ]
 }
 ### org_identities_view_per_identifier
 {
     "ResponseType": "OrgIdentities",
     "Version": "1.0",
-    "OrgIdentities": []
+    "OrgIdentities": [
+        ...
+    ]
 }
 ### org_identities_view_one
 {
@@ -983,16 +615,16 @@ $ python examples/org_identities_example.py
     "OrgIdentities": [
         {
             "Version": "1.0",
-            "Id": "12",
+            "Id": "<Id>",
             "Status": "SY",
             "Affiliation": "member",
-            "O": "National Center for Supercomputing Applications",
-            "CoId": "3",
-            "Created": "2018-11-05 20:40:19",
-            "Modified": "2018-11-05 20:40:19",
+            "O": "<Organization>",
+            "CoId": "<CoId>",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "0",
             "Deleted": false,
-            "ActorIdentifier": "http://cilogon.org/serverT/users/37233"
+            "ActorIdentifier": "<ActorIdentifier>"
         }
     ]
 }
@@ -1000,17 +632,20 @@ $ python examples/org_identities_example.py
 
 ## <a name="sshkey"></a>SshKey API
 
+Example: `ssh_keys_example.py`
 
-Example: `ssh_keys_example.py `
+This example dynamically discovers a CO Person ID, then performs a full CRUD cycle: add an SSH key, view all, view per person, view one, edit it, and delete it.
 
 ```console
-$ python examples/ssh_keys_example.py
+$ uv run python examples/ssh_keys_example.py
+### discover CO Person ID
+Using CO Person ID: <Id>
 ### ssh_keys_add
 {
     "ResponseType": "NewObject",
     "Version": "1.0",
     "ObjectType": "SshKey",
-    "Id": "38"
+    "Id": "<Id>"
 }
 ### ssh_keys_view_all
 [ERROR] Exception caught
@@ -1022,37 +657,20 @@ $ python examples/ssh_keys_example.py
     "SshKeys": [
         {
             "Version": "1.0",
-            "Id": "36",
+            "Id": "<Id>",
             "Person": {
                 "Type": "CO",
-                "Id": "163"
+                "Id": "<Id>"
             },
             "Comment": "SshKey API test",
             "Type": "ssh-rsa",
-            "Skey": "AAAAB3NzaC1yc2EAAAADAQABAAABAQCqlE3to9rJzLb5pUldEEeFi9gYlrIQ7WGFVvx4azWY95+nN8DkOukaK6IMnXP8t0icCWKN4ib6Q5Avea99HD8LQtsmxQjDIgwB/McX3cjXzwB6y8InEBB213bD6koHnsf/fELTTFt6MkJdNUbqOGFvHSUnN6BPUGQ42jXqPw6wVXzOR5nUX9bLc4uPS8moMVXWWK+lG7odGPXHju8AP/6gdjuRaFJnYE3OYoLNbEDnn6cneTtnz5AuQW0KBocc56MyOelNSzxoz/XcNvZH/Hp7wPAJNZhmN6/futZBjG0AzIBHs/J9JXszxq4FO3M4oqg0G+UgFQccXXi1afkJxu7z",
-            "Created": "2021-10-18 15:04:22",
-            "Modified": "2021-10-18 15:04:22",
+            "Skey": "AAAAB3NzaC1yc2EAAAADAQABAAABAQC...",
+            "Created": "<CreateTime>",
+            "Modified": "<ModTime>",
             "Revision": "0",
             "Deleted": false,
-            "ActorIdentifier": "co_6.impact-development",
-            "SshKeyAuthenticatorId": "7"
-        },
-        {
-            "Version": "1.0",
-            "Id": "38",
-            "Person": {
-                "Type": "CO",
-                "Id": "163"
-            },
-            "Comment": "SshKey API test",
-            "Type": "ssh-rsa",
-            "Skey": "AAAAB3NzaC1yc2EAAAADAQABAAABAQCqlE3to9rJzLb5pUldEEeFi9gYlrIQ7WGFVvx4azWY95+nN8DkOukaK6IMnXP8t0icCWKN4ib6Q5Avea99HD8LQtsmxQjDIgwB/McX3cjXzwB6y8InEBB213bD6koHnsf/fELTTFt6MkJdNUbqOGFvHSUnN6BPUGQ42jXqPw6wVXzOR5nUX9bLc4uPS8moMVXWWK+lG7odGPXHju8AP/6gdjuRaFJnYE3OYoLNbEDnn6cneTtnz5AuQW0KBocc56MyOelNSzxoz/XcNvZH/Hp7wPAJNZhmN6/futZBjG0AzIBHs/J9JXszxq4FO3M4oqg0G+UgFQccXXi1afkJxu7z",
-            "Created": "2021-10-18 15:07:07",
-            "Modified": "2021-10-18 15:07:07",
-            "Revision": "0",
-            "Deleted": false,
-            "ActorIdentifier": "co_6.impact-development",
-            "SshKeyAuthenticatorId": "7"
+            "ActorIdentifier": "<ActorIdentifier>",
+            "SshKeyAuthenticatorId": "<SshKeyAuthenticatorId>"
         }
     ]
 }
@@ -1062,21 +680,9 @@ $ python examples/ssh_keys_example.py
     "Version": "1.0",
     "SshKeys": [
         {
-            "Version": "1.0",
-            "Id": "36",
-            "Person": {
-                "Type": "CO",
-                "Id": "163"
-            },
+            ...
             "Comment": "SshKey API test",
-            "Type": "ssh-rsa",
-            "Skey": "AAAAB3NzaC1yc2EAAAADAQABAAABAQCqlE3to9rJzLb5pUldEEeFi9gYlrIQ7WGFVvx4azWY95+nN8DkOukaK6IMnXP8t0icCWKN4ib6Q5Avea99HD8LQtsmxQjDIgwB/McX3cjXzwB6y8InEBB213bD6koHnsf/fELTTFt6MkJdNUbqOGFvHSUnN6BPUGQ42jXqPw6wVXzOR5nUX9bLc4uPS8moMVXWWK+lG7odGPXHju8AP/6gdjuRaFJnYE3OYoLNbEDnn6cneTtnz5AuQW0KBocc56MyOelNSzxoz/XcNvZH/Hp7wPAJNZhmN6/futZBjG0AzIBHs/J9JXszxq4FO3M4oqg0G+UgFQccXXi1afkJxu7z",
-            "Created": "2021-10-18 15:04:22",
-            "Modified": "2021-10-18 15:04:22",
-            "Revision": "0",
-            "Deleted": false,
-            "ActorIdentifier": "co_6.impact-development",
-            "SshKeyAuthenticatorId": "7"
+            ...
         }
     ]
 }
@@ -1088,48 +694,18 @@ True
     "Version": "1.0",
     "SshKeys": [
         {
-            "Version": "1.0",
-            "Id": "36",
-            "Person": {
-                "Type": "CO",
-                "Id": "163"
-            },
+            ...
             "Comment": "NEW COMMENT",
-            "Type": "ssh-rsa",
-            "Skey": "AAAAB3NzaC1yc2EAAAADAQABAAABAQCqlE3to9rJzLb5pUldEEeFi9gYlrIQ7WGFVvx4azWY95+nN8DkOukaK6IMnXP8t0icCWKN4ib6Q5Avea99HD8LQtsmxQjDIgwB/McX3cjXzwB6y8InEBB213bD6koHnsf/fELTTFt6MkJdNUbqOGFvHSUnN6BPUGQ42jXqPw6wVXzOR5nUX9bLc4uPS8moMVXWWK+lG7odGPXHju8AP/6gdjuRaFJnYE3OYoLNbEDnn6cneTtnz5AuQW0KBocc56MyOelNSzxoz/XcNvZH/Hp7wPAJNZhmN6/futZBjG0AzIBHs/J9JXszxq4FO3M4oqg0G+UgFQccXXi1afkJxu7z",
-            "Created": "2021-10-18 15:04:22",
-            "Modified": "2021-10-18 15:07:08",
             "Revision": "1",
-            "Deleted": false,
-            "ActorIdentifier": "co_6.impact-development",
-            "SshKeyAuthenticatorId": "7"
+            ...
         }
     ]
 }
 ### ssh_keys_delete
 True
 ### ssh_keys_view_one (previously deleted ssh key)
-{
-    "ResponseType": "SshKeys",
-    "Version": "1.0",
-    "SshKeys": [
-        {
-            "Version": "1.0",
-            "Id": "35",
-            "Person": {
-                "Type": "CO",
-                "Id": "163"
-            },
-            "Comment": "NEW COMMENT",
-            "Type": "ssh-rsa",
-            "Skey": "AAAAB3NzaC1yc2EAAAADAQABAAABAQCqlE3to9rJzLb5pUldEEeFi9gYlrIQ7WGFVvx4azWY95+nN8DkOukaK6IMnXP8t0icCWKN4ib6Q5Avea99HD8LQtsmxQjDIgwB/McX3cjXzwB6y8InEBB213bD6koHnsf/fELTTFt6MkJdNUbqOGFvHSUnN6BPUGQ42jXqPw6wVXzOR5nUX9bLc4uPS8moMVXWWK+lG7odGPXHju8AP/6gdjuRaFJnYE3OYoLNbEDnn6cneTtnz5AuQW0KBocc56MyOelNSzxoz/XcNvZH/Hp7wPAJNZhmN6/futZBjG0AzIBHs/J9JXszxq4FO3M4oqg0G+UgFQccXXi1afkJxu7z",
-            "Created": "2021-10-18 15:00:08",
-            "Modified": "2021-10-18 15:04:24",
-            "Revision": "1",
-            "Deleted": true,
-            "ActorIdentifier": "co_6.impact-development",
-            "SshKeyAuthenticatorId": "7"
-        }
-    ]
-}
+[ERROR] Exception caught
+-->  HTTPError - 404 Client Error: Not Found for url: ...
 ```
+
+**NOTE**: `ssh_keys_view_all` returns 401 because the endpoint requires specific authorization beyond the API user credentials. Use `ssh_keys_view_per_coperson` to retrieve keys for a specific person.

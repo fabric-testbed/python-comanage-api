@@ -9,9 +9,17 @@ sys.path.append(
 )
 from examples import *
 
-# must be set ahead of time and be valid within the CO
-CO_PERSON_ID = 163
-PREV_DELETED_KEY_ID = 35
+# dynamically discover a valid CO Person ID from the CO
+print('### discover CO Person ID')
+try:
+    per_co_copeople = api.copeople_view_per_co()
+    CO_PERSON_ID = int(per_co_copeople['CoPeople'][0]['Id'])
+    print('Using CO Person ID: ' + str(CO_PERSON_ID))
+except (KeyError, IndexError, HTTPError) as err:
+    print('[ERROR] Could not discover a CO Person ID')
+    print('--> ', type(err).__name__, '-', err)
+    CO_PERSON_ID = None
+
 EX_SSH_KEY = 'AAAAB3NzaC1yc2EAAAADAQABAAABAQCqlE3to9rJzLb5pUldEEeFi9gYlrIQ7WGFVvx4azWY95+nN8DkOukaK6' \
              'IMnXP8t0icCWKN4ib6Q5Avea99HD8LQtsmxQjDIgwB/McX3cjXzwB6y8InEBB213bD6koHnsf/fELTTFt6MkJd' \
              'NUbqOGFvHSUnN6BPUGQ42jXqPw6wVXzOR5nUX9bLc4uPS8moMVXWWK+lG7odGPXHju8AP/6gdjuRaFJnYE3OYo' \
@@ -35,7 +43,7 @@ try:
         comment=comment
     )
     print(json.dumps(new_key, indent=4))
-except HTTPError as err:
+except (ValueError, HTTPError) as err:
     print('[ERROR] Exception caught')
     print('--> ', type(err).__name__, '-', err)
 
@@ -70,7 +78,7 @@ try:
     else:
         print('No SSH Keys Found...')
         ssh_key_id = -1
-except HTTPError as err:
+except (NameError, HTTPError) as err:
     print('[ERROR] Exception caught')
     print('--> ', type(err).__name__, '-', err)
 
@@ -88,7 +96,7 @@ try:
         print(edit_key)
     else:
         print('No SSH Keys Found...')
-except HTTPError as err:
+except (NameError, ValueError, HTTPError) as err:
     print('[ERROR] Exception caught')
     print('--> ', type(err).__name__, '-', err)
 
@@ -100,7 +108,7 @@ try:
         print(json.dumps(one_key, indent=4))
     else:
         print('No SSH Keys Found...')
-except HTTPError as err:
+except (NameError, HTTPError) as err:
     print('[ERROR] Exception caught')
     print('--> ', type(err).__name__, '-', err)
 
@@ -116,20 +124,18 @@ try:
         print(delete_key)
     else:
         print('No SSH Keys Found...')
-except HTTPError as err:
+except (NameError, HTTPError) as err:
     print('[ERROR] Exception caught')
     print('--> ', type(err).__name__, '-', err)
 
 # ssh_keys_view_one(ssh_key_id: int) -> dict
 print('### ssh_keys_view_one (previously deleted ssh key)')
 try:
-    # use known previously deleted key (demo purposes only)
-    ssh_key_id = PREV_DELETED_KEY_ID
     if ssh_key_id != -1:
         one_key = api.ssh_keys_view_one(ssh_key_id=ssh_key_id)
         print(json.dumps(one_key, indent=4))
     else:
         print('No SSH Keys Found...')
-except HTTPError as err:
+except (NameError, HTTPError) as err:
     print('[ERROR] Exception caught')
     print('--> ', type(err).__name__, '-', err)

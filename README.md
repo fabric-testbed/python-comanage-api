@@ -42,18 +42,23 @@ api = ComanageApi(
     co_api_pass=COMANAGE_API_PASS,
     co_api_org_id=COMANAGE_API_CO_ID,
     co_api_org_name=COMANAGE_API_CO_NAME,
-    co_ssh_key_authenticator_id=COMANAGE_API_SSH_KEY_AUTHENTICATOR_ID
+    co_ssh_key_authenticator_id=COMANAGE_API_SSH_KEY_AUTHENTICATOR_ID,
+    timeout=30  # optional, HTTP request timeout in seconds (default: 30)
 )
+```
+
+**Built-in robustness:** All HTTP requests include a configurable timeout (default 30s) and automatic retry with exponential backoff on transient failures (429, 500, 502, 503, 504).
+
+**Logging:** The library uses Python's standard `logging` module under the `comanage_api` logger. No output is produced by default. To enable:
+
+```python
+import logging
+logging.basicConfig(level=logging.DEBUG)
 ```
 
 Get some data! (example using `cous_view_per_co()` which retrieves all COUs attached to a given CO)
 
 ```python
-$ python
-Python 3.9.6 (v3.9.6:db3ff76da1, Jun 28 2021, 11:49:53)
-[Clang 6.0 (clang-600.0.57)] on darwin
-Type "help", "copyright", "credits" or "license" for more information.
->>>
 >>> from comanage_api import ComanageApi
 >>>
 >>> api = ComanageApi(
@@ -62,7 +67,8 @@ Type "help", "copyright", "credits" or "license" for more information.
 ...     co_api_pass='xxxx-xxxx-xxxx-xxxx',
 ...     co_api_org_id='123',
 ...     co_api_org_name='RegistryName',
-...     co_ssh_key_authenticator_id='123'
+...     co_ssh_key_authenticator_id='123',
+...     timeout=30
 ... )
 >>>
 >>> cous = api.cous_view_per_co()
@@ -117,8 +123,8 @@ Return types based on implementation status of wrapped API endpoints
     - `-> dict`: Data is returned as a Python [Dictionary](https://docs.python.org/3/c-api/dict.html) object
     - `-> bool`: Success/Failure is returned as Python [Boolean](https://docs.python.org/3/c-api/bool.html) object
 - Not Implemented (`### NOT IMPLEMENTED ###`): 
-    - `-> dict`: raise exception (`HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local`)
-    - `-> bool`: raise exception (`HTTPError - 501 Server Error: Not Implemented for url: mock://not_implemented_501.local`)
+    - `-> dict`: raises `NotImplementedError`
+    - `-> bool`: raises `NotImplementedError`
 
 ### <a name="coorgidentitylink"></a>[CoOrgIdentityLink API](https://spaces.at.internet2.edu/display/COmanage/CoOrgIdentityLink+API) (COmanage v4.0.0+)
 
@@ -135,15 +141,15 @@ Return types based on implementation status of wrapped API endpoints
     - Edit an existing CO Identity Link.
 - `coorg_identity_links_view_all() -> dict`
     - Retrieve all existing CO Identity Links.
-- `coorg_identity_links_view_by_identity(identifier_id: int) -> dict`
+- `coorg_identity_links_view_by_identity(identity_type: str, identity_id: int) -> dict`
     - Retrieve all existing CO Identity Links for a CO Person or an Org Identity.
-- `coorg_identity_links_view_one(org_identity_id: int) -> dict`
+- `coorg_identity_links_view_one(coorg_identity_link_id: int) -> dict`
     - Retrieve an existing CO Identity Link.
 
 **NOTE**: when provided, valid values for `identity_type` as follows:
 
 ```python
-IDENTITY_OPTIONS = ['copersonid', 'orgidentityid']
+PERSON_OPTIONS = ['copersonid', 'orgidentityid']
 ```
 
 ### <a name="coperson"></a>[CoPerson API](https://spaces.at.internet2.edu/display/COmanage/CoPerson+API) (COmanage v3.3.0+)
@@ -311,7 +317,7 @@ PERSON_OPTIONS = ['copersonid', 'orgidentityid']
     - Edit an existing Organizational Identity.
 - `org_identities_view_all() -> dict`
     - Retrieve all existing Organizational Identities.
-- `org_identities_view_per_co(person_type: str, person_id: int) -> dict`
+- `org_identities_view_per_co() -> dict`
     - Retrieve all existing Organizational Identities for the specified CO.
 - `org_identities_view_per_identifier(identifier_id: int) -> dict`
     - Retrieve all existing Organizational Identities attached to the specified identifier.
@@ -329,7 +335,7 @@ PERSON_OPTIONS = ['copersonid', 'orgidentityid']
 - `ssh_keys_delete(ssh_key_id: int) -> bool`
     - Remove an SSH Key.
 - `ssh_keys_edit(ssh_key_id: int, coperson_id: int = None, ssh_key: str = None, key_type: str = None, comment: str = None, ssh_key_authenticator_id: int = None) -> bool`
-    - Edit an exiting SSH Key.
+    - Edit an existing SSH Key.
 - `ssh_keys_view_all() -> dict`
     - Retrieve all existing SSH Keys.
 - `ssh_keys_view_per_coperson(coperson_id: int) -> dict`
@@ -346,28 +352,31 @@ SSH_KEY_OPTIONS = ['ssh-dss', 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384',
 
 ## <a name="usage"></a>Usage
 
-Set up a virtual environment (`virtualenv` is used in these examples)
+### Install
 
-```console
-virtualenv -p /usr/local/bin/python3 venv
-source venv/bin/activate
-```
-
-### Install supporting packages
-
-Install from PyPi
+Install from PyPI:
 
 ```console
 pip install fabric-comanage-api
 ```
 
-**OR** 
+### Development setup
 
-Install for Local Development
+This project uses [uv](https://docs.astral.sh/uv/) for dependency management. To set up a development environment:
 
 ```console
-pip install -r requirements.txt
+uv venv --python 3.12
+uv pip install -e ".[dev]"
 ```
+
+### Lint and test
+
+```console
+uv run ruff check .    # lint
+uv run pytest -v       # test
+```
+
+CI runs both on every push to `main`/`develop` and on PRs, across Python 3.9–3.12.
 
 ### Configure your environment
 
@@ -457,6 +466,6 @@ Pressing the "Edit" option will display the fields for the Authenticator along w
 - Identifier API: [https://spaces.at.internet2.edu/display/COmanage/Identifier+API](https://spaces.at.internet2.edu/display/COmanage/Identifier+API)
 - Name API: [https://spaces.at.internet2.edu/display/COmanage/Name+API](https://spaces.at.internet2.edu/display/COmanage/Name+API)
 - OrgIdentity API: [https://spaces.at.internet2.edu/display/COmanage/OrgIdentity+API](https://spaces.at.internet2.edu/display/COmanage/OrgIdentity+API)
-- SsHKey API: [https://spaces.at.internet2.edu/display/COmanage/SshKey+API](https://spaces.at.internet2.edu/display/COmanage/SshKey+API)
+- SshKey API: [https://spaces.at.internet2.edu/display/COmanage/SshKey+API](https://spaces.at.internet2.edu/display/COmanage/SshKey+API)
 - SSH Key Authenticator Plugin: [https://spaces.at.internet2.edu/display/COmanage/SSH+Key+Authenticator+Plugin](https://spaces.at.internet2.edu/display/COmanage/SSH+Key+Authenticator+Plugin)
 - PyPi: [https://pypi.org](https://pypi.org)

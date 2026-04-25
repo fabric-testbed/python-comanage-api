@@ -1,6 +1,56 @@
 [build-system]
-requires = [
-    "setuptools",
-    "wheel"
-]
+requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "fabric-comanage-api"
+description = "Fabric COmanage API"
+dynamic = ["version"]
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [
+    { name = "Michael J. Stealey", email = "michael.j.stealey@gmail.com" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "requests>=2.25.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "requests-mock",
+    "python-dotenv",
+    "ruff",
+]
+
+[project.urls]
+Homepage = "https://github.com/fabric-testbed/python-comanage-api"
+Repository = "https://github.com/fabric-testbed/python-comanage-api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+extend-exclude = ["examples"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.setuptools.dynamic]
+version = { attr = "comanage_api.__VERSION__" }
+
+[tool.setuptools.packages.find]
+include = ["comanage_api*"]
+exclude = ["examples*", "tests*"]
