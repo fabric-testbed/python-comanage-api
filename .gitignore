@@ -142,3 +142,4 @@ cython_debug/
 .idea
 tldr.py
 userinfo
+development_plan.md

@@ -16,7 +16,7 @@ from ._orgidentities import OrgIdentitiesMixin
 from ._sshkeys import SshKeysMixin
 
 # fabric-comanage-api version
-__VERSION__ = "0.1.5"
+__VERSION__ = "0.2.0"
 
 # Library logging: NullHandler prevents "last resort" output for callers
 # who don't configure logging. Callers who want logs should add their own
