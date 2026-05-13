@@ -5,6 +5,20 @@ All notable changes to `fabric-comanage-api` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-05-13
+
+### Security
+
+- Bumped `urllib3` minimum to `>=2.7.0` to remediate
+  [CVE-2026-44431](https://github.com/advisories) and
+  [CVE-2026-44432](https://github.com/advisories) (both fixed in urllib3 2.7.0).
+- Bumped `requests` minimum to `>=2.32.4`.
+
+### Changed
+
+- Raised minimum supported Python from 3.9 to 3.10 (required by urllib3 2.7.0).
+- CI matrix updated to Python 3.10, 3.11, 3.12, and 3.13.
+
 ## [0.2.0] - 2026-04-25
 
 A substantial refactor focused on robustness, testability, and packaging
