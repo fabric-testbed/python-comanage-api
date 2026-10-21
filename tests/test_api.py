@@ -52,7 +52,7 @@ class TestConstructor:
         assert isinstance(adapter, HTTPAdapter)
 
     def test_version(self):
-        assert __VERSION__ == '0.2.2'
+        assert __VERSION__ == '0.2.3'
 
 
 class TestOptionSets:
