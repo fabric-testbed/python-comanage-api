@@ -5,6 +5,28 @@ All notable changes to `fabric-comanage-api` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-10-21
+
+### Changed
+
+- POST requests are no longer retried on 429/5xx responses. POST is not
+  idempotent, so a retry after a server-side success could create a duplicate
+  record. GET, PUT and DELETE are still retried with exponential backoff.
+- `cous_edit`, `coperson_roles_edit` and `ssh_keys_edit` now keep the existing
+  value only when an argument is `None`. Passing `''` clears a field such as a
+  COU description or SSH key comment; previously falsy values were silently
+  ignored. An empty `status`, `affiliation` or `key_type` now raises
+  `ValueError`.
+
+### Fixed
+
+- CoPersonRole `status` is now matched case-insensitively and sent in
+  COmanage's canonical form (`'active'` -> `'Active'`), consistent with
+  affiliation and SSH key type.
+- The HTTP session keeps requests' default headers (`User-Agent`,
+  `Accept-Encoding`, `Accept`) instead of replacing them with `Content-Type`
+  alone.
+
 ## [0.2.3] - 2026-10-21
 
 ### Security

@@ -47,6 +47,13 @@ class TestCopersonRolesAdd:
         assert body['CoPersonRoles'][0]['Status'] == 'Pending'
         assert body['CoPersonRoles'][0]['Affiliation'] == 'faculty'
 
+    def test_status_case_insensitive(self, api, mock_adapter):
+        mock_adapter.post(f'{API_URL}/co_person_roles.json', json=NEW_ROLE, status_code=201)
+        api.coperson_roles_add(coperson_id=100, cou_id=42, status='active', affiliation='Faculty')
+        body = mock_adapter.last_request.json()
+        assert body['CoPersonRoles'][0]['Status'] == 'Active'
+        assert body['CoPersonRoles'][0]['Affiliation'] == 'faculty'
+
     def test_invalid_status(self, api, mock_adapter):
         with pytest.raises(ValueError, match="status"):
             api.coperson_roles_add(coperson_id=100, cou_id=42, status='BadStatus')
@@ -100,6 +107,18 @@ class TestCopersonRolesEdit:
         mock_adapter.get(f'{API_URL}/co_person_roles/200.json', json=SAMPLE_ROLE)
         with pytest.raises(ValueError, match="affiliation"):
             api.coperson_roles_edit(coperson_role_id=200, affiliation='king')
+
+    def test_edit_empty_status_rejected(self, api, mock_adapter):
+        mock_adapter.get(f'{API_URL}/co_person_roles/200.json', json=SAMPLE_ROLE)
+        with pytest.raises(ValueError, match="status"):
+            api.coperson_roles_edit(coperson_role_id=200, status='')
+
+    def test_edit_status_case_insensitive(self, api, mock_adapter):
+        mock_adapter.get(f'{API_URL}/co_person_roles/200.json', json=SAMPLE_ROLE)
+        mock_adapter.put(f'{API_URL}/co_person_roles/200.json', status_code=200)
+        api.coperson_roles_edit(coperson_role_id=200, status='pendingapproval')
+        body = mock_adapter.last_request.json()
+        assert body['CoPersonRoles'][0]['Status'] == 'PendingApproval'
 
 
 class TestCopersonRolesView:

@@ -16,7 +16,7 @@ from ._orgidentities import OrgIdentitiesMixin
 from ._sshkeys import SshKeysMixin
 
 # fabric-comanage-api version
-__VERSION__ = "0.2.3"
+__VERSION__ = "0.3.0"
 
 # Library logging: NullHandler prevents "last resort" output for callers
 # who don't configure logging. Callers who want logs should add their own
@@ -99,17 +99,19 @@ class ComanageApi(
         self.SSH_KEY_OPTIONS = ['ssh-dss', 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384', 'ecdsa-sha2-nistp521',
                                 'ssh-ed25519', 'ssh-rsa', 'ssh-rsa1']
         # create comanage_api session with retry logic
+        # POST is excluded: it is not idempotent, so retrying a POST that succeeded server-side
+        # but returned an error status could create a duplicate record
         retry = Retry(
             total=3,
             backoff_factor=1,
             status_forcelist=[429, 500, 502, 503, 504],
-            allowed_methods=['GET', 'POST', 'PUT', 'DELETE'],
+            allowed_methods=['GET', 'PUT', 'DELETE'],
         )
         adapter = HTTPAdapter(max_retries=retry)
         self._s = Session()
         self._s.mount('https://', adapter)
         self._s.mount('http://', adapter)
-        self._s.headers = {'Content-Type': 'application/json'}
+        self._s.headers.update({'Content-Type': 'application/json'})
         self._s.auth = (self._CO_API_USER, self._CO_API_PASS)
 
     # HTTP helpers
