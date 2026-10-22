@@ -51,6 +51,11 @@ class TestConstructor:
         adapter = api._s.get_adapter('https://example.com')
         assert isinstance(adapter, HTTPAdapter)
 
+    def test_session_headers_keep_defaults(self, api, mock_adapter):
+        assert api._s.headers['Content-Type'] == 'application/json'
+        assert api._s.headers['User-Agent'].startswith('python-requests/')
+        assert 'Accept-Encoding' in api._s.headers
+
     def test_retry_excludes_post(self, api, mock_adapter):
         retry = api._s.get_adapter('https://example.com').max_retries
         assert 'POST' not in retry.allowed_methods

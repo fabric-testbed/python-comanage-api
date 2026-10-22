@@ -111,7 +111,7 @@ class ComanageApi(
         self._s = Session()
         self._s.mount('https://', adapter)
         self._s.mount('http://', adapter)
-        self._s.headers = {'Content-Type': 'application/json'}
+        self._s.headers.update({'Content-Type': 'application/json'})
         self._s.auth = (self._CO_API_USER, self._CO_API_PASS)
 
     # HTTP helpers
