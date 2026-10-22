@@ -99,11 +99,13 @@ class ComanageApi(
         self.SSH_KEY_OPTIONS = ['ssh-dss', 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384', 'ecdsa-sha2-nistp521',
                                 'ssh-ed25519', 'ssh-rsa', 'ssh-rsa1']
         # create comanage_api session with retry logic
+        # POST is excluded: it is not idempotent, so retrying a POST that succeeded server-side
+        # but returned an error status could create a duplicate record
         retry = Retry(
             total=3,
             backoff_factor=1,
             status_forcelist=[429, 500, 502, 503, 504],
-            allowed_methods=['GET', 'POST', 'PUT', 'DELETE'],
+            allowed_methods=['GET', 'PUT', 'DELETE'],
         )
         adapter = HTTPAdapter(max_retries=retry)
         self._s = Session()
