@@ -8,6 +8,13 @@ CoPersonRole API - https://spaces.at.internet2.edu/display/COmanage/CoPersonRole
 class CoPersonRolesMixin:
     """Mixin providing CoPersonRole API methods."""
 
+    def _normalize_status(self, status: str) -> str:
+        # match case-insensitively, return the canonical COmanage spelling (e.g. 'active' -> 'Active')
+        canonical = {option.lower(): option for option in self.STATUS_OPTIONS}.get(str(status).lower())
+        if canonical is None:
+            raise ValueError("Invalid Fields 'status'")
+        return canonical
+
     def coperson_roles_add(self, coperson_id: int, cou_id: int, status: str = None,
                            affiliation: str = None) -> dict:
         """
@@ -36,9 +43,7 @@ class CoPersonRolesMixin:
             'O': str(self._CO_API_ORG_NAME)
         }
         if status:
-            if status not in self.STATUS_OPTIONS:
-                raise ValueError("Invalid Fields 'status'")
-            role['Status'] = str(status)
+            role['Status'] = self._normalize_status(status)
         else:
             role['Status'] = 'Active'
         if affiliation:
@@ -102,9 +107,7 @@ class CoPersonRolesMixin:
             'O': str(self._CO_API_ORG_NAME)
         }
         if status is not None:
-            if status not in self.STATUS_OPTIONS:
-                raise ValueError("Invalid Fields 'status'")
-            role['Status'] = str(status)
+            role['Status'] = self._normalize_status(status)
         else:
             role['Status'] = existing_role.get('Status')
         if affiliation is not None:
