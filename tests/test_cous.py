@@ -84,6 +84,14 @@ class TestCousEdit:
         assert body['Cous'][0]['Name'] == 'test-cou'
         assert body['Cous'][0]['Description'] == 'A test COU'
 
+    def test_edit_clears_description(self, api, mock_adapter):
+        mock_adapter.get(f'{API_URL}/cous/42.json', json=SAMPLE_COU)
+        mock_adapter.put(f'{API_URL}/cous/42.json', status_code=200)
+        api.cous_edit(cou_id=42, description='')
+        body = mock_adapter.last_request.json()
+        assert body['Cous'][0]['Description'] == ''
+        assert body['Cous'][0]['Name'] == 'test-cou'
+
     def test_parent_id_set(self, api, mock_adapter):
         mock_adapter.get(f'{API_URL}/cous/42.json', json=SAMPLE_COU)
         mock_adapter.put(f'{API_URL}/cous/42.json', status_code=200)

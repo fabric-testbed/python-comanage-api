@@ -107,14 +107,14 @@ class SshKeysMixin:
             'Version': '1.0',
             'Person': {
                 'Type': 'CO',
-                'Id': str(coperson_id) if coperson_id else str(existing_key.get('Person').get('Id'))
+                'Id': str(coperson_id) if coperson_id is not None else str(existing_key.get('Person').get('Id'))
             },
-            'Skey': str(ssh_key) if ssh_key else existing_key.get('Skey'),
-            'Comment': str(comment) if comment else existing_key.get('Comment'),
-            'SshKeyAuthenticatorId': str(ssh_key_authenticator_id) if ssh_key_authenticator_id
+            'Skey': str(ssh_key) if ssh_key is not None else existing_key.get('Skey'),
+            'Comment': str(comment) if comment is not None else existing_key.get('Comment'),
+            'SshKeyAuthenticatorId': str(ssh_key_authenticator_id) if ssh_key_authenticator_id is not None
             else str(existing_key.get('SshKeyAuthenticatorId'))
         }
-        if key_type:
+        if key_type is not None:
             key_type = str(key_type).lower()
             if key_type not in self.SSH_KEY_OPTIONS:
                 raise ValueError("Invalid Fields 'key_type'")

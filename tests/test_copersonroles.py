@@ -101,6 +101,11 @@ class TestCopersonRolesEdit:
         with pytest.raises(ValueError, match="affiliation"):
             api.coperson_roles_edit(coperson_role_id=200, affiliation='king')
 
+    def test_edit_empty_status_rejected(self, api, mock_adapter):
+        mock_adapter.get(f'{API_URL}/co_person_roles/200.json', json=SAMPLE_ROLE)
+        with pytest.raises(ValueError, match="status"):
+            api.coperson_roles_edit(coperson_role_id=200, status='')
+
 
 class TestCopersonRolesView:
     def test_view_all(self, api, mock_adapter):

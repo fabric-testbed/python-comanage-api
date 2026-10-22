@@ -96,18 +96,18 @@ class CoPersonRolesMixin:
             'Version': '1.0',
             'Person': {
                 'Type': 'CO',
-                'Id': str(coperson_id) if coperson_id else str(existing_role.get('Person').get('Id'))
+                'Id': str(coperson_id) if coperson_id is not None else str(existing_role.get('Person').get('Id'))
             },
-            'CouId': str(cou_id) if cou_id else str(existing_role.get('CouId')),
+            'CouId': str(cou_id) if cou_id is not None else str(existing_role.get('CouId')),
             'O': str(self._CO_API_ORG_NAME)
         }
-        if status:
+        if status is not None:
             if status not in self.STATUS_OPTIONS:
                 raise ValueError("Invalid Fields 'status'")
             role['Status'] = str(status)
         else:
             role['Status'] = existing_role.get('Status')
-        if affiliation:
+        if affiliation is not None:
             affiliation = str(affiliation).lower()
             if affiliation not in self.AFFILIATION_OPTIONS:
                 raise ValueError("Invalid Fields 'affiliation'")

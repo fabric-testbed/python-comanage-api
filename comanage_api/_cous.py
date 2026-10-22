@@ -80,8 +80,8 @@ class COUsMixin:
         cou = {
             'Version': '1.0',
             'CoId': self._CO_API_ORG_ID,
-            'Name': str(name) if name else existing_cou.get('Name'),
-            'Description': str(description) if description else existing_cou.get('Description')
+            'Name': str(name) if name is not None else existing_cou.get('Name'),
+            'Description': str(description) if description is not None else existing_cou.get('Description')
         }
         if parent_id is not None and parent_id != 0:
             cou['ParentId'] = str(parent_id)

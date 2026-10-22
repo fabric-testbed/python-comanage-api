@@ -96,6 +96,13 @@ class TestSshKeysEdit:
         assert body['SshKeys'][0]['Skey'] == 'AAAAB3NzaC1yc2EAAAADAQABAAABAQC...'
         assert body['SshKeys'][0]['Comment'] == 'test key'
 
+    def test_edit_clears_comment(self, api, mock_adapter):
+        mock_adapter.get(f'{API_URL}/{SSH_PATH}/700.json', json=SAMPLE_SSHKEY)
+        mock_adapter.put(f'{API_URL}/{SSH_PATH}/700.json', status_code=200)
+        api.ssh_keys_edit(ssh_key_id=700, comment='')
+        body = mock_adapter.last_request.json()
+        assert body['SshKeys'][0]['Comment'] == ''
+
     def test_edit_key_type(self, api, mock_adapter):
         mock_adapter.get(f'{API_URL}/{SSH_PATH}/700.json', json=SAMPLE_SSHKEY)
         mock_adapter.put(f'{API_URL}/{SSH_PATH}/700.json', status_code=200)
