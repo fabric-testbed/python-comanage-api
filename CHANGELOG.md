@@ -5,6 +5,20 @@ All notable changes to `fabric-comanage-api` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-11-03
+
+### Security
+
+- Require `certifi>=2026.10.18`. Earlier bundles include emSign root CAs whose
+  intermediate CA keys were compromised (PYSEC-2026-4320 /
+  GHSA-6q48-6c7w-9gw2). `certifi` is pulled in through `requests`; it is now
+  pinned directly to enforce the floor.
+
+### Changed
+
+- Refreshed `uv.lock` to current releases (`requests` 2.34.2, `idna` 3.20,
+  `certifi` 2026.10.23, `ruff` 0.17.3, `pytest` 9.2.0).
+
 ## [0.3.0] - 2026-10-21
 
 ### Changed

@@ -4,7 +4,7 @@
 Python 3 client wrapper for the [COmanage REST API v1](https://spaces.at.internet2.edu/display/COmanage/REST+API+v1), published to PyPI as `fabric-comanage-api`. Part of the FABRIC Testbed. MIT.
 
 ## Stack
-Python >=3.10. Runtime deps: `requests`, `urllib3`, `idna` (pinned directly for CVE floors). Dev: `pytest`, `requests-mock`, `python-dotenv`, `ruff`. setuptools backend (PEP 621); version sourced dynamically from `comanage_api.__VERSION__`.
+Python >=3.10. Runtime deps: `requests`, `urllib3`, `idna`, `certifi` (pinned directly for CVE floors). Dev: `pytest`, `requests-mock`, `python-dotenv`, `ruff`. setuptools backend (PEP 621); version sourced dynamically from `comanage_api.__VERSION__`.
 
 ## Conventions
 - `ComanageApi` (`comanage_api/__init__.py`) is the single public class. It holds connection state + a `requests.Session` (HTTP Basic Auth) and centralizes all I/O in helpers `_get`/`_post`/`_put`/`_delete`/`_get_by_entity`.
