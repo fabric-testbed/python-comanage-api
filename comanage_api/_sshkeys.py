@@ -19,14 +19,15 @@ Implementation Notes
 """
 
 # SSH Key plugin base path
-_SSH_KEY_PATH = 'ssh_key_authenticator/ssh_keys'
+_SSH_KEY_PATH = "ssh_key_authenticator/ssh_keys"
 
 
 class SshKeysMixin:
     """Mixin providing SshKey API methods."""
 
-    def ssh_keys_add(self, coperson_id: int, ssh_key: str, key_type: str, comment: str = None,
-                     ssh_key_authenticator_id: int = None) -> dict:
+    def ssh_keys_add(
+        self, coperson_id: int, ssh_key: str, key_type: str, comment: str = None, ssh_key_authenticator_id: int = None
+    ) -> dict:
         """
         Add a new SSH Key.
 
@@ -48,23 +49,23 @@ class SshKeysMixin:
         key_type = str(key_type).lower()
         if key_type not in self.SSH_KEY_OPTIONS:
             raise ValueError("Invalid Fields 'key_type'")
-        return self._post(f'{_SSH_KEY_PATH}.json', {
-            'RequestType': 'SshKeys',
-            'Version': '1.0',
-            'SshKeys': [
-                {
-                    'Version': '1.0',
-                    'Person': {
-                        'Type': 'CO',
-                        'Id': str(coperson_id)
-                    },
-                    'Comment': str(comment) if comment else '',
-                    'Type': str(key_type),
-                    'Skey': str(ssh_key),
-                    'SshKeyAuthenticatorId': str(ssh_key_authenticator_id)
-                }
-            ]
-        })
+        return self._post(
+            f"{_SSH_KEY_PATH}.json",
+            {
+                "RequestType": "SshKeys",
+                "Version": "1.0",
+                "SshKeys": [
+                    {
+                        "Version": "1.0",
+                        "Person": {"Type": "CO", "Id": str(coperson_id)},
+                        "Comment": str(comment) if comment else "",
+                        "Type": str(key_type),
+                        "Skey": str(ssh_key),
+                        "SshKeyAuthenticatorId": str(ssh_key_authenticator_id),
+                    }
+                ],
+            },
+        )
 
     def ssh_keys_delete(self, ssh_key_id: int) -> bool:
         """
@@ -79,10 +80,17 @@ class SshKeysMixin:
             404 SshKey Unknown                          id not found
             500 Other Error                             Unknown error
         """
-        return self._delete(f'{_SSH_KEY_PATH}/{ssh_key_id}.json')
+        return self._delete(f"{_SSH_KEY_PATH}/{ssh_key_id}.json")
 
-    def ssh_keys_edit(self, ssh_key_id: int, coperson_id: int = None, ssh_key: str = None, key_type: str = None,
-                      comment: str = None, ssh_key_authenticator_id: int = None) -> bool:
+    def ssh_keys_edit(
+        self,
+        ssh_key_id: int,
+        coperson_id: int = None,
+        ssh_key: str = None,
+        key_type: str = None,
+        comment: str = None,
+        ssh_key_authenticator_id: int = None,
+    ) -> bool:
         """
         Edit an existing SSH Key.
 
@@ -102,30 +110,30 @@ class SshKeysMixin:
             500 Other Error                                             Unknown error
         """
         existing = self.ssh_keys_view_one(ssh_key_id=ssh_key_id)
-        existing_key = existing.get('SshKeys')[0]
+        existing_key = existing.get("SshKeys")[0]
         sshkey_record = {
-            'Version': '1.0',
-            'Person': {
-                'Type': 'CO',
-                'Id': str(coperson_id) if coperson_id is not None else str(existing_key.get('Person').get('Id'))
+            "Version": "1.0",
+            "Person": {
+                "Type": "CO",
+                "Id": str(coperson_id) if coperson_id is not None else str(existing_key.get("Person").get("Id")),
             },
-            'Skey': str(ssh_key) if ssh_key is not None else existing_key.get('Skey'),
-            'Comment': str(comment) if comment is not None else existing_key.get('Comment'),
-            'SshKeyAuthenticatorId': str(ssh_key_authenticator_id) if ssh_key_authenticator_id is not None
-            else str(existing_key.get('SshKeyAuthenticatorId'))
+            "Skey": str(ssh_key) if ssh_key is not None else existing_key.get("Skey"),
+            "Comment": str(comment) if comment is not None else existing_key.get("Comment"),
+            "SshKeyAuthenticatorId": str(ssh_key_authenticator_id)
+            if ssh_key_authenticator_id is not None
+            else str(existing_key.get("SshKeyAuthenticatorId")),
         }
         if key_type is not None:
             key_type = str(key_type).lower()
             if key_type not in self.SSH_KEY_OPTIONS:
                 raise ValueError("Invalid Fields 'key_type'")
-            sshkey_record['Type'] = str(key_type)
+            sshkey_record["Type"] = str(key_type)
         else:
-            sshkey_record['Type'] = existing_key.get('Type')
-        return self._put(f'{_SSH_KEY_PATH}/{ssh_key_id}.json', {
-            'RequestType': 'SshKeys',
-            'Version': '1.0',
-            'SshKeys': [sshkey_record]
-        })
+            sshkey_record["Type"] = existing_key.get("Type")
+        return self._put(
+            f"{_SSH_KEY_PATH}/{ssh_key_id}.json",
+            {"RequestType": "SshKeys", "Version": "1.0", "SshKeys": [sshkey_record]},
+        )
 
     def ssh_keys_view_all(self) -> dict:
         """
@@ -137,7 +145,7 @@ class SshKeysMixin:
             401 Unauthorized                        Authentication required
             500 Other Error                         Unknown error
         """
-        return self._get(f'{_SSH_KEY_PATH}.json')
+        return self._get(f"{_SSH_KEY_PATH}.json")
 
     def ssh_keys_view_per_coperson(self, coperson_id: int) -> dict:
         """
@@ -153,20 +161,16 @@ class SshKeysMixin:
             500 Other Error                             Unknown error
         """
         url = f"{self._CO_API_URL}/{_SSH_KEY_PATH}.json"
-        params = {'copersonid': str(coperson_id)}
-        self._log.debug('GET %s params=%s', url, params)
+        params = {"copersonid": str(coperson_id)}
+        self._log.debug("GET %s params=%s", url, params)
         resp = self._s.get(url=url, params=params, timeout=self._timeout)
         if resp.status_code == 204:
-            self._log.info('GET %s returned 204 (no SSH keys)', url)
-            return {
-                'RequestType': 'SshKeys',
-                'Version': '1.0',
-                'SshKeys': []
-            }
+            self._log.info("GET %s returned 204 (no SSH keys)", url)
+            return {"RequestType": "SshKeys", "Version": "1.0", "SshKeys": []}
         if not resp.ok:
-            self._log.warning('GET %s returned %s', url, resp.status_code)
+            self._log.warning("GET %s returned %s", url, resp.status_code)
         resp.raise_for_status()
-        self._log.info('GET %s OK', url)
+        self._log.info("GET %s OK", url)
         return resp.json()
 
     def ssh_keys_view_one(self, ssh_key_id: int) -> dict:
@@ -182,4 +186,4 @@ class SshKeysMixin:
             404 SSH Key Unknown                         id not found
             500 Other Error                             Unknown error
         """
-        return self._get(f'{_SSH_KEY_PATH}/{ssh_key_id}.json')
+        return self._get(f"{_SSH_KEY_PATH}/{ssh_key_id}.json")

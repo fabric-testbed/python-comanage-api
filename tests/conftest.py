@@ -3,11 +3,11 @@ import requests_mock as rm
 
 from comanage_api import ComanageApi
 
-API_URL = 'https://registry.example.org/registry'
-API_USER = 'co_123.test-user'
-API_PASS = 'test-pass'
+API_URL = "https://registry.example.org/registry"
+API_USER = "co_123.test-user"
+API_PASS = "test-pass"
 CO_ID = 123
-CO_NAME = 'TestCO'
+CO_NAME = "TestCO"
 SSH_KEY_AUTH_ID = 7
 
 

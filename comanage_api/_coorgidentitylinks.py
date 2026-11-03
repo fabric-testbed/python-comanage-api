@@ -59,7 +59,7 @@ class CoOrgIdentityLinksMixin:
             401 Unauthorized                                    Authentication required
             500 Other Error                                     Unknown error
         """
-        return self._get('co_org_identity_links.json')
+        return self._get("co_org_identity_links.json")
 
     def coorg_identity_links_view_by_identity(self, identity_type: str, identity_id: int) -> dict:
         """
@@ -93,8 +93,9 @@ class CoOrgIdentityLinksMixin:
             404 Org Identity Unknown                                    orgidentityid not found
             500 Other Error                                             Unknown error
         """
-        return self._get_by_entity('co_org_identity_links.json', identity_type, identity_id,
-                                   self.PERSON_OPTIONS, 'identity_type')
+        return self._get_by_entity(
+            "co_org_identity_links.json", identity_type, identity_id, self.PERSON_OPTIONS, "identity_type"
+        )
 
     def coorg_identity_links_view_one(self, coorg_identity_link_id: int) -> dict:
         """
@@ -125,4 +126,4 @@ class CoOrgIdentityLinksMixin:
             404 CoOrgIdentityLink Unknown                                   id not found
             500 Other Error                                                 Unknown error
         """
-        return self._get(f'co_org_identity_links/{coorg_identity_link_id}.json')
+        return self._get(f"co_org_identity_links/{coorg_identity_link_id}.json")

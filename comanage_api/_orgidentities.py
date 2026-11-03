@@ -30,7 +30,7 @@ class OrgIdentitiesMixin:
             401 Unauthorized                            Authentication required
             500 Other Error                             Unknown error
         """
-        return self._get('org_identities.json')
+        return self._get("org_identities.json")
 
     def org_identities_view_per_co(self) -> dict:
         """
@@ -43,7 +43,7 @@ class OrgIdentitiesMixin:
             404 CO Unknown                              id not found
             500 Other Error                             Unknown error
         """
-        return self._get('org_identities.json', params={'coid': self._CO_API_ORG_ID})
+        return self._get("org_identities.json", params={"coid": self._CO_API_ORG_ID})
 
     def org_identities_view_per_identifier(self, identifier_id: int) -> dict:
         """
@@ -59,10 +59,9 @@ class OrgIdentitiesMixin:
             404 CO Unknown                              id not found
             500 Other Error                             Unknown error
         """
-        return self._get('org_identities.json', params={
-            'coid': self._CO_API_ORG_ID,
-            'search.identifier': int(identifier_id)
-        })
+        return self._get(
+            "org_identities.json", params={"coid": self._CO_API_ORG_ID, "search.identifier": int(identifier_id)}
+        )
 
     def org_identities_view_one(self, org_identity_id: int) -> dict:
         """
@@ -77,4 +76,4 @@ class OrgIdentitiesMixin:
             404 OrgIdentity Unknown                                 id not found
             500 Other Error                                         Unknown error
         """
-        return self._get(f'org_identities/{org_identity_id}.json', params={'coid': self._CO_API_ORG_ID})
+        return self._get(f"org_identities/{org_identity_id}.json", params={"coid": self._CO_API_ORG_ID})

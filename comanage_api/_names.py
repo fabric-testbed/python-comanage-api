@@ -30,7 +30,7 @@ class NamesMixin:
             401 Unauthorized                            Authentication required
             500 Other Error                             Unknown error
         """
-        return self._get('names.json')
+        return self._get("names.json")
 
     def names_view_per_person(self, person_type: str, person_id: int) -> dict:
         """
@@ -45,8 +45,7 @@ class NamesMixin:
             401 Unauthorized                                    Authentication required
             500 Other Error                                     Unknown error
         """
-        return self._get_by_entity('names.json', person_type, person_id,
-                                   self.PERSON_OPTIONS, 'person_type')
+        return self._get_by_entity("names.json", person_type, person_id, self.PERSON_OPTIONS, "person_type")
 
     def names_view_one(self, name_id: int) -> dict:
         """
@@ -61,4 +60,4 @@ class NamesMixin:
             404 Name Unknown                                    id not found
             500 Other Error                                     Unknown error
         """
-        return self._get(f'names/{name_id}.json')
+        return self._get(f"names/{name_id}.json")

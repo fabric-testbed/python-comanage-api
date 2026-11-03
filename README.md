@@ -43,7 +43,7 @@ api = ComanageApi(
     co_api_org_id=COMANAGE_API_CO_ID,
     co_api_org_name=COMANAGE_API_CO_NAME,
     co_ssh_key_authenticator_id=COMANAGE_API_SSH_KEY_AUTHENTICATOR_ID,
-    timeout=30  # optional, HTTP request timeout in seconds (default: 30)
+    timeout=30,  # optional, HTTP request timeout in seconds (default: 30)
 )
 ```
 
@@ -53,6 +53,7 @@ api = ComanageApi(
 
 ```python
 import logging
+
 logging.basicConfig(level=logging.DEBUG)
 ```
 
@@ -149,7 +150,7 @@ Return types based on implementation status of wrapped API endpoints
 **NOTE**: when provided, valid values for `identity_type` as follows:
 
 ```python
-PERSON_OPTIONS = ['copersonid', 'orgidentityid']
+PERSON_OPTIONS = ["copersonid", "orgidentityid"]
 ```
 
 ### <a name="coperson"></a>[CoPerson API](https://spaces.at.internet2.edu/display/COmanage/CoPerson+API) (COmanage v3.3.0+)
@@ -205,9 +206,23 @@ before the OrgIdentity record can be removed.
 **NOTE**: when provided, valid values for `status` and `affiliation` as follows:
 
 ```python
-STATUS_OPTIONS = ['Active', 'Approved', 'Confirmed', 'Declined', 'Deleted', 'Denied', 'Duplicate', 
-'Expired', 'GracePeriod', 'Invited', 'Pending', 'PendingApproval', 'PendingConfirmation', 'Suspended']
-AFFILIATION_OPTIONS = ['affiliate', 'alum', 'employee', 'faculty', 'member', 'staff', 'student']
+STATUS_OPTIONS = [
+    "Active",
+    "Approved",
+    "Confirmed",
+    "Declined",
+    "Deleted",
+    "Denied",
+    "Duplicate",
+    "Expired",
+    "GracePeriod",
+    "Invited",
+    "Pending",
+    "PendingApproval",
+    "PendingConfirmation",
+    "Suspended",
+]
+AFFILIATION_OPTIONS = ["affiliate", "alum", "employee", "faculty", "member", "staff", "student"]
 ```
 
 ### <a name="cou"></a>[COU API](https://spaces.at.internet2.edu/display/COmanage/COU+API) (COmanage v3.3.0+)
@@ -248,7 +263,7 @@ AFFILIATION_OPTIONS = ['affiliate', 'alum', 'employee', 'faculty', 'member', 'st
 **NOTE**: when provided, valid values for `person_type` as follows:
 
 ```python
-EMAILADDRESS_OPTIONS = ['codeptid', 'copersonid', 'organizationid', 'orgidentityid']
+EMAILADDRESS_OPTIONS = ["codeptid", "copersonid", "organizationid", "orgidentityid"]
 ```
 
 ### <a name="identifier"></a>[Identifier API](https://spaces.at.internet2.edu/display/COmanage/Identifier+API) (COmanage v3.3.0+)
@@ -275,7 +290,7 @@ EMAILADDRESS_OPTIONS = ['codeptid', 'copersonid', 'organizationid', 'orgidentity
 **NOTE**: when provided, valid values for `entity_type` as follows:
 
 ```python
-ENTITY_OPTIONS = ['codeptid', 'cogroupid', 'copersonid', 'organizationid', 'orgidentityid']
+ENTITY_OPTIONS = ["codeptid", "cogroupid", "copersonid", "organizationid", "orgidentityid"]
 ```   
 
 ### <a name="name"></a>[Name API](https://spaces.at.internet2.edu/display/COmanage/Name+API) (COmanage v3.3.0+)
@@ -299,7 +314,7 @@ ENTITY_OPTIONS = ['codeptid', 'cogroupid', 'copersonid', 'organizationid', 'orgi
 **NOTE**: when provided, valid values for `person_type` as follows:
 
 ```python
-PERSON_OPTIONS = ['copersonid', 'orgidentityid']
+PERSON_OPTIONS = ["copersonid", "orgidentityid"]
 ```
 
 ### <a name="orgidentity"></a>[OrgIdentity API](https://spaces.at.internet2.edu/display/COmanage/OrgIdentity+API) (COmanage v3.3.0+)
@@ -346,8 +361,15 @@ PERSON_OPTIONS = ['copersonid', 'orgidentityid']
 **NOTE**: when provided, valid values for `ssh_key_type` as follows:
 
 ```python
-SSH_KEY_OPTIONS = ['ssh-dss', 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384', 
-'ecdsa-sha2-nistp521', 'ssh-ed25519', 'ssh-rsa', 'ssh-rsa1']
+SSH_KEY_OPTIONS = [
+    "ssh-dss",
+    "ecdsa-sha2-nistp256",
+    "ecdsa-sha2-nistp384",
+    "ecdsa-sha2-nistp521",
+    "ssh-ed25519",
+    "ssh-rsa",
+    "ssh-rsa1",
+]
 ```
 
 ## <a name="usage"></a>Usage

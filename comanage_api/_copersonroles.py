@@ -15,8 +15,7 @@ class CoPersonRolesMixin:
             raise ValueError("Invalid Fields 'status'")
         return canonical
 
-    def coperson_roles_add(self, coperson_id: int, cou_id: int, status: str = None,
-                           affiliation: str = None) -> dict:
+    def coperson_roles_add(self, coperson_id: int, cou_id: int, status: str = None, affiliation: str = None) -> dict:
         """
         Add a new CO Person Role.
 
@@ -34,30 +33,25 @@ class CoPersonRolesMixin:
             500 Other Error                                             Unknown error
         """
         role = {
-            'Version': '1.0',
-            'Person': {
-                'Type': 'CO',
-                'Id': str(coperson_id)
-            },
-            'CouId': str(cou_id),
-            'O': str(self._CO_API_ORG_NAME)
+            "Version": "1.0",
+            "Person": {"Type": "CO", "Id": str(coperson_id)},
+            "CouId": str(cou_id),
+            "O": str(self._CO_API_ORG_NAME),
         }
         if status:
-            role['Status'] = self._normalize_status(status)
+            role["Status"] = self._normalize_status(status)
         else:
-            role['Status'] = 'Active'
+            role["Status"] = "Active"
         if affiliation:
             affiliation = str(affiliation).lower()
             if affiliation not in self.AFFILIATION_OPTIONS:
                 raise ValueError("Invalid Fields 'affiliation'")
-            role['Affiliation'] = str(affiliation)
+            role["Affiliation"] = str(affiliation)
         else:
-            role['Affiliation'] = 'member'
-        return self._post('co_person_roles.json', {
-            'RequestType': 'CoPersonRoles',
-            'Version': '1.0',
-            'CoPersonRoles': [role]
-        })
+            role["Affiliation"] = "member"
+        return self._post(
+            "co_person_roles.json", {"RequestType": "CoPersonRoles", "Version": "1.0", "CoPersonRoles": [role]}
+        )
 
     def coperson_roles_delete(self, coperson_role_id: int) -> bool:
         """
@@ -73,10 +67,16 @@ class CoPersonRolesMixin:
             404 CoPersonRole Unknown                        id not found
             500 Other Error                                 Unknown error
         """
-        return self._delete(f'co_person_roles/{coperson_role_id}.json')
+        return self._delete(f"co_person_roles/{coperson_role_id}.json")
 
-    def coperson_roles_edit(self, coperson_role_id: int, coperson_id: int = None, cou_id: int = None,
-                            status: str = None, affiliation: str = None) -> bool:
+    def coperson_roles_edit(
+        self,
+        coperson_role_id: int,
+        coperson_id: int = None,
+        cou_id: int = None,
+        status: str = None,
+        affiliation: str = None,
+    ) -> bool:
         """
         Edit an existing CO Person Role.
 
@@ -96,32 +96,31 @@ class CoPersonRolesMixin:
             500 Other Error                                                 Unknown error
         """
         existing = self.coperson_roles_view_one(coperson_role_id)
-        existing_role = existing.get('CoPersonRoles')[0]
+        existing_role = existing.get("CoPersonRoles")[0]
         role = {
-            'Version': '1.0',
-            'Person': {
-                'Type': 'CO',
-                'Id': str(coperson_id) if coperson_id is not None else str(existing_role.get('Person').get('Id'))
+            "Version": "1.0",
+            "Person": {
+                "Type": "CO",
+                "Id": str(coperson_id) if coperson_id is not None else str(existing_role.get("Person").get("Id")),
             },
-            'CouId': str(cou_id) if cou_id is not None else str(existing_role.get('CouId')),
-            'O': str(self._CO_API_ORG_NAME)
+            "CouId": str(cou_id) if cou_id is not None else str(existing_role.get("CouId")),
+            "O": str(self._CO_API_ORG_NAME),
         }
         if status is not None:
-            role['Status'] = self._normalize_status(status)
+            role["Status"] = self._normalize_status(status)
         else:
-            role['Status'] = existing_role.get('Status')
+            role["Status"] = existing_role.get("Status")
         if affiliation is not None:
             affiliation = str(affiliation).lower()
             if affiliation not in self.AFFILIATION_OPTIONS:
                 raise ValueError("Invalid Fields 'affiliation'")
-            role['Affiliation'] = str(affiliation)
+            role["Affiliation"] = str(affiliation)
         else:
-            role['Affiliation'] = existing_role.get('Affiliation')
-        return self._put(f'co_person_roles/{coperson_role_id}.json', {
-            'RequestType': 'CoPersonRoles',
-            'Version': '1.0',
-            'CoPersonRoles': [role]
-        })
+            role["Affiliation"] = existing_role.get("Affiliation")
+        return self._put(
+            f"co_person_roles/{coperson_role_id}.json",
+            {"RequestType": "CoPersonRoles", "Version": "1.0", "CoPersonRoles": [role]},
+        )
 
     def coperson_roles_view_all(self) -> dict:
         """
@@ -133,7 +132,7 @@ class CoPersonRolesMixin:
             401 Unauthorized                                            Authentication required
             500 Other Error                                             Unknown error
         """
-        return self._get('co_person_roles.json')
+        return self._get("co_person_roles.json")
 
     def coperson_roles_view_per_coperson(self, coperson_id: int) -> dict:
         """
@@ -148,7 +147,7 @@ class CoPersonRolesMixin:
             404 CO Person Unknown                                       id not found
             500 Other Error                                             Unknown error
         """
-        return self._get('co_person_roles.json', params={'copersonid': int(coperson_id)})
+        return self._get("co_person_roles.json", params={"copersonid": int(coperson_id)})
 
     def coperson_roles_view_per_cou(self, cou_id: int) -> dict:
         """
@@ -163,7 +162,7 @@ class CoPersonRolesMixin:
             404 COU Unknown                                             id not found
             500 Other Error                                             Unknown error
         """
-        return self._get('co_person_roles.json', params={'couid': int(cou_id)})
+        return self._get("co_person_roles.json", params={"couid": int(cou_id)})
 
     def coperson_roles_view_one(self, coperson_role_id: int) -> dict:
         """
@@ -178,4 +177,4 @@ class CoPersonRolesMixin:
             404 CoPersonRole Unknown                                        id not found
             500 Other Error                                                 Unknown error
         """
-        return self._get(f'co_person_roles/{coperson_role_id}.json')
+        return self._get(f"co_person_roles/{coperson_role_id}.json")
