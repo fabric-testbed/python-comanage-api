@@ -395,6 +395,7 @@ uv pip install -e ".[dev]"
 
 ```console
 uv run ruff check .    # lint
+uv run ruff format .   # format (CI runs --check)
 uv run pytest -v       # test
 ```
 
