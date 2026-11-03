@@ -34,7 +34,7 @@ class IdentifiersMixin:
             401 Unauthorized                            Authentication required
             500 Other Error                             Unknown error
         """
-        return self._get('identifiers.json')
+        return self._get("identifiers.json")
 
     def identifiers_view_per_entity(self, entity_type: str, entity_id: int) -> dict:
         """
@@ -49,8 +49,7 @@ class IdentifiersMixin:
             401 Unauthorized                                    Authentication required
             500 Other Error                                     Unknown error
         """
-        return self._get_by_entity('identifiers.json', entity_type, entity_id,
-                                   self.ENTITY_OPTIONS, 'entity_type')
+        return self._get_by_entity("identifiers.json", entity_type, entity_id, self.ENTITY_OPTIONS, "entity_type")
 
     def identifiers_view_one(self, identifier_id: int) -> dict:
         """
@@ -65,4 +64,4 @@ class IdentifiersMixin:
             404 Identifier Unknown                              id not found
             500 Other Error                                     Unknown error
         """
-        return self._get(f'identifiers/{identifier_id}.json')
+        return self._get(f"identifiers/{identifier_id}.json")

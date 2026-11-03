@@ -6,8 +6,8 @@ CoPerson API - https://spaces.at.internet2.edu/display/COmanage/CoPerson+API
 
 
 def _deduplicate_copeople(resp_dict: dict) -> dict:
-    distinct_copeople = list({v['Id']: v for v in resp_dict.get('CoPeople')}.values())
-    resp_dict['CoPeople'] = distinct_copeople
+    distinct_copeople = list({v["Id"]: v for v in resp_dict.get("CoPeople")}.values())
+    resp_dict["CoPeople"] = distinct_copeople
     return resp_dict
 
 
@@ -46,8 +46,9 @@ class CoPeopleMixin:
         """
         raise NotImplementedError("copeople_find() is not implemented")
 
-    def copeople_match(self, given: str = None, family: str = None, mail: str = None,
-                       distinct_by_id: bool = True) -> dict:
+    def copeople_match(
+        self, given: str = None, family: str = None, mail: str = None, distinct_by_id: bool = True
+    ) -> dict:
         """
         Attempt to match existing CO Person records.
         Note that matching is not performed on search criteria of less than 3 characters,
@@ -64,14 +65,14 @@ class CoPeopleMixin:
             401 Unauthorized                                Authentication required
             500 Other Error                                 Unknown error
         """
-        params = {'coid': self._CO_API_ORG_ID}
+        params = {"coid": self._CO_API_ORG_ID}
         if given:
-            params['given'] = given
+            params["given"] = given
         if family:
-            params['family'] = family
+            params["family"] = family
         if mail:
-            params['mail'] = mail
-        resp_dict = self._get('co_people.json', params=params)
+            params["mail"] = mail
+        resp_dict = self._get("co_people.json", params=params)
         if distinct_by_id:
             return _deduplicate_copeople(resp_dict)
         return resp_dict
@@ -86,7 +87,7 @@ class CoPeopleMixin:
             401 Unauthorized                                Authentication required
             500 Other Error                                 Unknown error
         """
-        return self._get('co_people.json')
+        return self._get("co_people.json")
 
     def copeople_view_per_co(self) -> dict:
         """
@@ -98,7 +99,7 @@ class CoPeopleMixin:
             401 Unauthorized                                Authentication required
             500 Other Error                                 Unknown error
         """
-        return self._get('co_people.json', params={'coid': self._CO_API_ORG_ID})
+        return self._get("co_people.json", params={"coid": self._CO_API_ORG_ID})
 
     def copeople_view_per_identifier(self, identifier: str, distinct_by_id: bool = True) -> dict:
         """
@@ -115,8 +116,8 @@ class CoPeopleMixin:
             404 CO Unknown                                      id not found
             500 Other Error                                     Unknown error
         """
-        params = {'coid': self._CO_API_ORG_ID, 'search.identifier': identifier}
-        resp_dict = self._get('co_people.json', params=params)
+        params = {"coid": self._CO_API_ORG_ID, "search.identifier": identifier}
+        resp_dict = self._get("co_people.json", params=params)
         if distinct_by_id:
             return _deduplicate_copeople(resp_dict)
         return resp_dict
@@ -134,4 +135,4 @@ class CoPeopleMixin:
             404 copeople Unknown                                id not found
             500 Other Error                                     Unknown error
         """
-        return self._get(f'co_people/{coperson_id}.json', params={'coid': self._CO_API_ORG_ID})
+        return self._get(f"co_people/{coperson_id}.json", params={"coid": self._CO_API_ORG_ID})

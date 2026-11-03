@@ -25,19 +25,10 @@ class COUsMixin:
             403 Name In Use                                             A COU already exists with the specified name
             500 Other Error                                             Unknown error
         """
-        cou = {
-            'Version': '1.0',
-            'CoId': self._CO_API_ORG_ID,
-            'Name': str(name),
-            'Description': str(description)
-        }
+        cou = {"Version": "1.0", "CoId": self._CO_API_ORG_ID, "Name": str(name), "Description": str(description)}
         if parent_id:
-            cou['ParentId'] = str(parent_id)
-        return self._post('cous.json', {
-            'RequestType': 'Cous',
-            'Version': '1.0',
-            'Cous': [cou]
-        })
+            cou["ParentId"] = str(parent_id)
+        return self._post("cous.json", {"RequestType": "Cous", "Version": "1.0", "Cous": [cou]})
 
     def cous_delete(self, cou_id: int) -> bool:
         """
@@ -53,10 +44,9 @@ class COUsMixin:
             404 Identifier Unknown                          id not found
             500 Other Error                                 Unknown error
         """
-        return self._delete(f'cous/{cou_id}.json', params={'coid': self._CO_API_ORG_ID})
+        return self._delete(f"cous/{cou_id}.json", params={"coid": self._CO_API_ORG_ID})
 
-    def cous_edit(self, cou_id: int, name: str = None, description: str = None,
-                  parent_id: int = None) -> bool:
+    def cous_edit(self, cou_id: int, name: str = None, description: str = None, parent_id: int = None) -> bool:
         """
         Edit an existing Cou.
 
@@ -76,25 +66,21 @@ class COUsMixin:
             500 Other Error                                             Unknown error
         """
         existing = self.cous_view_one(cou_id)
-        existing_cou = existing.get('Cous')[0]
+        existing_cou = existing.get("Cous")[0]
         cou = {
-            'Version': '1.0',
-            'CoId': self._CO_API_ORG_ID,
-            'Name': str(name) if name is not None else existing_cou.get('Name'),
-            'Description': str(description) if description is not None else existing_cou.get('Description')
+            "Version": "1.0",
+            "CoId": self._CO_API_ORG_ID,
+            "Name": str(name) if name is not None else existing_cou.get("Name"),
+            "Description": str(description) if description is not None else existing_cou.get("Description"),
         }
         if parent_id is not None and parent_id != 0:
-            cou['ParentId'] = str(parent_id)
+            cou["ParentId"] = str(parent_id)
         elif parent_id == 0:
-            cou['ParentId'] = ''
+            cou["ParentId"] = ""
         else:
-            if existing_cou.get('ParentId'):
-                cou['ParentId'] = str(existing_cou.get('ParentId'))
-        return self._put(f'cous/{cou_id}.json', {
-            'RequestType': 'Cous',
-            'Version': '1.0',
-            'Cous': [cou]
-        })
+            if existing_cou.get("ParentId"):
+                cou["ParentId"] = str(existing_cou.get("ParentId"))
+        return self._put(f"cous/{cou_id}.json", {"RequestType": "Cous", "Version": "1.0", "Cous": [cou]})
 
     def cous_view_all(self) -> dict:
         """
@@ -106,7 +92,7 @@ class COUsMixin:
             401 Unauthorized                        Authentication required
             500 Other Error                         Unknown error
         """
-        return self._get('cous.json')
+        return self._get("cous.json")
 
     def cous_view_per_co(self) -> dict:
         """
@@ -119,7 +105,7 @@ class COUsMixin:
             404 CO Unknown                          id not found
             500 Other Error                         Unknown error
         """
-        return self._get('cous.json', params={'coid': self._CO_API_ORG_ID})
+        return self._get("cous.json", params={"coid": self._CO_API_ORG_ID})
 
     def cous_view_one(self, cou_id: int) -> dict:
         """
@@ -134,4 +120,4 @@ class COUsMixin:
             404 COU Unknown                         id not found
             500 Other Error                         Unknown error
         """
-        return self._get(f'cous/{cou_id}.json', params={'coid': self._CO_API_ORG_ID})
+        return self._get(f"cous/{cou_id}.json", params={"coid": self._CO_API_ORG_ID})

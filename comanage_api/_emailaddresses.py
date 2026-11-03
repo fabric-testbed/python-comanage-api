@@ -30,7 +30,7 @@ class EmailAddressesMixin:
             401 Unauthorized                            Authentication required
             500 Other Error                             Unknown error
         """
-        return self._get('email_addresses.json')
+        return self._get("email_addresses.json")
 
     def email_addresses_view_per_person(self, person_type: str, person_id: int) -> dict:
         """
@@ -45,8 +45,9 @@ class EmailAddressesMixin:
             401 Unauthorized                                    Authentication required
             500 Other Error                                     Unknown error
         """
-        return self._get_by_entity('email_addresses.json', person_type, person_id,
-                                   self.EMAILADDRESS_OPTIONS, 'person_type')
+        return self._get_by_entity(
+            "email_addresses.json", person_type, person_id, self.EMAILADDRESS_OPTIONS, "person_type"
+        )
 
     def email_addresses_view_one(self, email_address_id: int) -> dict:
         """
@@ -61,4 +62,4 @@ class EmailAddressesMixin:
             404 EmailAddress Unknown                                id not found
             500 Other Error                                         Unknown error
         """
-        return self._get(f'email_addresses/{email_address_id}.json')
+        return self._get(f"email_addresses/{email_address_id}.json")
