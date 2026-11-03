@@ -376,7 +376,7 @@ uv run ruff check .    # lint
 uv run pytest -v       # test
 ```
 
-CI runs both on every push to `main`/`develop` and on PRs, across Python 3.10–3.14.
+CI runs both on every push to `main`/`develop` and on PRs, across Python 3.11–3.14.
 
 ### Configure your environment
 

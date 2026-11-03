@@ -62,7 +62,7 @@ class TestConstructor:
         assert {'GET', 'PUT', 'DELETE'} <= set(retry.allowed_methods)
 
     def test_version(self):
-        assert __VERSION__ == '0.3.1'
+        assert __VERSION__ == '0.4.0'
 
 
 class TestOptionSets:
