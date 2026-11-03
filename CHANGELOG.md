@@ -14,8 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   GHSA-6q48-6c7w-9gw2). `certifi` is pulled in through `requests`; it is now
   pinned directly to enforce the floor.
 
+### Added
+
+- Python 3.14 support (classifier and CI matrix).
+
 ### Changed
 
+- CI and release now install from `uv.lock` (`uv sync --locked`), run
+  `pip-audit` against it, and use SHA-pinned, current GitHub Actions.
+  Dependabot keeps Python deps and Actions up to date.
 - Refreshed `uv.lock` to current releases (`requests` 2.34.2, `idna` 3.20,
   `certifi` 2026.10.23, `ruff` 0.17.3, `pytest` 9.2.0).
 
